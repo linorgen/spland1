@@ -48,9 +48,9 @@ class Facility: public FacilityType {
         Facility();
         const string &getSettlementName() const;
         const int getTimeLeft() const;
+        const FacilityStatus& getStatus() const;
         FacilityStatus step();
         void setStatus(FacilityStatus status);
-        const FacilityStatus& getStatus() const;
         const string toString() const;
 
     private:

@@ -11,6 +11,23 @@ plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), facil
     economy_score = 0;
     environment_score = 0; };
 
+//constructor that uses selection policy string
+Plan::Plan(const int planId, const Settlement &settlement, const string &selectionPolicy, const vector<FacilityType> &facilityOptions): 
+plan_id(planId), settlement(settlement), facilityOptions(facilityOptions){
+    life_quality_score = 0;
+    economy_score = 0;
+    environment_score = 0; 
+    SelectionPolicy* pol;
+    if(selectionPolicy == "env")
+        pol = new SustainabilitySelection();
+    else if(selectionPolicy =="nve")
+        pol = new NaiveSelection();
+    else if(selectionPolicy == "bal")
+        pol = new BalancedSelection(0,0,0);
+    else if(selectionPolicy == "eco")
+        pol = new EconomySelection(); 
+    };
+
 //copy constructor
 Plan::Plan(const Plan &other, const int thisplanId): plan_id(thisplanId), settlement(other.settlement), selectionPolicy(other.selectionPolicy), facilityOptions(other.facilityOptions),
  life_quality_score(other.life_quality_score), economy_score(other.economy_score), environment_score(other.environment_score){

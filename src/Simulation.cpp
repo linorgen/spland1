@@ -78,12 +78,31 @@ bool Simulation::isSettlementExists(const string &settlementName){
     }
     return false;
 };
+
+bool Simulation::isFacilityExists(const string &facilityName){
+    for(const FacilityType facType: facilitiesOptions){
+        if(facilityName == facType.getName()){
+            return true;
+        }   
+    }
+    return false;
+};
+
+bool Simulation::isPlanExists(const int planId){
+    for(Plan p: plans){
+        if(planId == p.getPlanId()){
+            return true;
+        }   
+    }
+    return false;
+};
+
 Settlement& Simulation::getSettlement(const string &settlementName){
     for(Settlement* set: settlements){
         if(settlementName == set->getName()){
             return *set;
         }   
-    }
+    } 
 };
 Plan& Simulation::getPlan(const int planID){
     for(Plan p: plans){

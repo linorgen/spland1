@@ -6,6 +6,20 @@ using std::vector;
 #include <iostream>
 using namespace std;
 
+//convert selectionPolicy string to selectionPolicy
+    SelectionPolicy* SelectionPolicy::strToPolicy (const string& selectionPolicy){
+        SelectionPolicy* pol = nullptr;
+        if(selectionPolicy == "env")
+            pol = new SustainabilitySelection();
+        else if(selectionPolicy =="nve")
+            pol = new NaiveSelection();
+        else if(selectionPolicy == "bal")
+            pol = new BalancedSelection(0,0,0);
+        else if(selectionPolicy == "eco")
+            pol = new EconomySelection();
+        return pol;
+        };
+
 //Naive selection
 //check clone - what is it supposed to do?
 
