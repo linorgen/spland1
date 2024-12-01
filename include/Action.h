@@ -4,6 +4,7 @@
 #include "Settlement.h"
 #include "SelectionPolicy.h"
 #include "Simulation.h"
+#include "Plan.h"
 enum class SettlementType;
 enum class FacilityCategory;
 

@@ -56,8 +56,8 @@ using namespace std;
     };
     AddPlan* AddPlan::clone() const override;
 
-//AddSettelment
-    AddSettlement::AddSettlement(const string &settlementName,SettlementType settlementType):settelmentName(settlementName), settelmentType(SettlementType){};
+//AddSettelement
+    AddSettlement::AddSettlement(const string &settlementName,SettlementType settlementType):settlementName(settlementName), settelementType(SettlementType){};
     void AddSettlement::act(Simulation &simulation){
         if(simulation.isSettlementExists(settlementName)){
             BaseAction::error("Settlment already exsists"); // set error message
