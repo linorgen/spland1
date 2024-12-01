@@ -25,4 +25,4 @@ g++ -std=c++11 -Wall -c src/main.cpp -o bin/main.o
 g++ -std=c++11 -Wall -c src/Settlement.cpp -o bin/Settlement.o
 g++ -std=c++11 -Wall -c src/Facility.cpp -o bin/Facility.o-
 g++ -std=c++11 -o ./bin/program ./bin/main.o ./bin/Settlement.o ./bin/Facility.o 
-./bin/program'
+./bin/program

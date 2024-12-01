@@ -1,9 +1,10 @@
-#include "Simulation.h"
+
 #include "Plan.h"
 #include "Settlement.h"
 #include "Facility.h"
 #include "Action.h"
 #include "SelectionPolicy.h"
+#include "Simulation.h"
 #include <iostream>
 using namespace std;
 
@@ -37,9 +38,7 @@ using namespace std;
     };
 
 //AddPlan
-    AddPlan::AddPlan(const string &settlementName, const string &selectionPolicy):settlementName(settlementName),selectionPolicy(selectionPolicy){
-    
-    };
+    AddPlan::AddPlan(const string &settlementName, const string &selectionPolicy):settlementName(settlementName),selectionPolicy(selectionPolicy){};
     void AddPlan::act(Simulation &simulation){
         Settlement& set = simulation.getSettlement(settlementName);
         SelectionPolicy *policy = SelectionPolicy::strToPolicy(selectionPolicy);
@@ -56,8 +55,8 @@ using namespace std;
     };
     AddPlan* AddPlan::clone() const override;
 
-//AddSettelement
-    AddSettlement::AddSettlement(const string &settlementName,SettlementType settlementType):settlementName(settlementName), settelementType(SettlementType){};
+//AddSettlement
+    AddSettlement::AddSettlement(const string &settlementName,SettlementType settlementType):settlementName(settlementName), settlementType(SettlementType){};
     void AddSettlement::act(Simulation &simulation){
         if(simulation.isSettlementExists(settlementName)){
             BaseAction::error("Settlment already exsists"); // set error message

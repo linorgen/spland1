@@ -5,8 +5,8 @@
 #include "SelectionPolicy.h"
 #include "Simulation.h"
 #include "Plan.h"
-enum class SettlementType;
 enum class FacilityCategory;
+enum class SettlementType
 
 enum class ActionStatus{
     COMPLETED, ERROR
@@ -56,7 +56,7 @@ class AddPlan : public BaseAction {
 
 class AddSettlement : public BaseAction {
     public:
-        AddSettlement(const string &settlementName,SettlementType settlementType);
+        AddSettlement(const string &settlementName, SettlementType settlementType);
         void act(Simulation &simulation) override;
         AddSettlement *clone() const override;
         const string toString() const override;
