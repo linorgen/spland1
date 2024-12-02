@@ -1,7 +1,7 @@
-#include "SelectionPolicy.h"
+#include "../include/SelectionPolicy.h"
 #pragma once
 #include <vector>
-#include "Facility.h"
+#include "../include/Facility.h"
 using std::vector;
 #include <iostream>
 using namespace std;

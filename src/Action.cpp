@@ -1,17 +1,17 @@
 
-#include "Plan.h"
-#include "Settlement.h"
-#include "Facility.h"
-#include "Action.h"
-#include "SelectionPolicy.h"
-#include "Simulation.h"
+#include "../include/Plan.h"
+#include "../include/Settlement.h"
+#include "../include/Facility.h"
+#include "../include/Action.h"
+#include "../include/SelectionPolicy.h"
+#include "../include/Simulation.h"
 #include <iostream>
 using namespace std;
 
 //BaseAction
     BaseAction::BaseAction():errorMsg(""),status(ActionStatus::COMPLETED){};
     ActionStatus BaseAction::getStatus() const{ return status; };
-    void BaseAction::complete(){ status = ActionStatus::COMPLETED };
+    void BaseAction::complete(){ status = ActionStatus::COMPLETED; };
     void BaseAction::error(string errorMsg) { 
         status = ActionStatus::ERROR;
         errorMsg = errorMsg;
