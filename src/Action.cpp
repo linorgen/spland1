@@ -101,13 +101,40 @@ using namespace std;
     const string PrintPlanStatus::toString() const override;
 
 //ChangePlanPolicy
-class ChangePlanPolicy : public BaseAction {
-    public:
-        ChangePlanPolicy(const int planId, const string &newPolicy);
-        void act(Simulation &simulation) override;
-        ChangePlanPolicy *clone() const override;
-        const string toString() const override;
-    private:
-        const int planId;
-        const string newPolicy;
-};
+    ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy):planId(planId), newPolicy(newPolicy){};
+    void ChangePlanPolicy::act(Simulation &simulation){
+        const SelectionPolicy* currPol = (simulation.getPlan(planId)).getSelectionPolicy();
+        if(currPol->toString() == newPolicy){
+            BaseAction::error("Cannot change selection policy"); // set error message
+        }
+        else{
+            SelectionPolicy* newPol = SelectionPolicy::strToPolicy(newPolicy);
+            (simulation.getPlan(planId)).setSelectionPolicy(newPol);
+        }
+    };
+    ChangePlanPolicy* ChangePlanPolicy::clone() const override;
+    const string ChangePlanPolicy::toString() const override;
+
+//PrintActionsLog
+    PrintActionsLog();
+    void act(Simulation &simulation) override;
+    PrintActionsLog *clone() const override;
+    const string toString() const override;
+
+//Close
+    Close();
+    void act(Simulation &simulation) override;
+    Close *clone() const override;
+    const string toString() const override;
+
+//BackupSimulation
+    BackupSimulation();
+    void act(Simulation &simulation) override;
+    BackupSimulation *clone() const override;
+    const string toString() const override;
+
+//RestoreSimulation
+    RestoreSimulation();
+    void act(Simulation &simulation) override;
+    RestoreSimulation *clone() const override;
+    const string toString() const override;
