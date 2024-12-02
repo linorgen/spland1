@@ -17,7 +17,7 @@ using namespace std;
 
 
 
-Simulation::Simulation(const string &configFilePath){
+Simulation::Simulation(const string &configFilePath):planCounter(0){
     ifstream configFile(configFilePath);  // Open the config file for reading
     if (!configFile.is_open()) {
         std::cerr << "Unable to open configuration file: " << configFilePath << std::endl;
@@ -131,6 +131,7 @@ void Simulation::start(){
         else
             cout << "unkown command" << endl;
     }
+    //delete everything
 };
 
 void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy){
@@ -170,13 +171,18 @@ bool Simulation::isFacilityExists(const string &facilityName){
 };
 
 bool Simulation::isPlanExists(const int planId){
-    for(Plan p: plans){
-        if(planId == p.getPlanId()){
-            return true;
-        }   
-    }
-    return false;
+    if (planId < plans.size() && planId >= 0)
+        return true;
+    else
+        return false;
 };
+
+bool Simulation:: isPolicyExists(const string policy){
+    if (policy == "eco" || policy == "nve" || policy == "bal" || policy == "env")
+        return true;
+    else
+        return false;
+}
 
 Settlement& Simulation::getSettlement(const string &settlementName){
     for(Settlement* set: settlements){
@@ -187,12 +193,14 @@ Settlement& Simulation::getSettlement(const string &settlementName){
     throw invalid_argument("Settlement " + settlementName + " doesn't exist");
 };
 Plan& Simulation::getPlan(const int planID){
-    for(Plan p: plans){
-        if(planID == p.getPlanId()){
-            return p;
-        }   
-    }
-    throw invalid_argument("Plan " + to_string(planID) + " doesn't exist");
+    if (planID < plans.size() && planID >= 0)
+        return plans[planID];
+    else
+        throw invalid_argument("Plan " + to_string(planID) + " doesn't exist");
+};
+
+const vector<Plan>& Simulation::getPlanVector(){
+    return plans;
 };
 
 void Simulation::step(){
@@ -208,4 +216,5 @@ void Simulation::open(){
 
 void Simulation::close(){
     isRunning = false;
+
 };

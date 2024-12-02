@@ -21,11 +21,13 @@ class Plan {
         const int getPlanId() const;
         const SelectionPolicy* getSelectionPolicy();
         const vector<Facility*> &getFacilities() const;
+        string getSettlementName();
         void setSelectionPolicy(SelectionPolicy *selectionPolicy);
         void step();
         void printStatus();
         void addFacility(Facility* facility);
         const string toString() const;
+        const string toStringClose() const;
         
     private:
         int plan_id;

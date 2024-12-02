@@ -65,7 +65,9 @@ const int Plan::getPlanId() const{
     return plan_id; };
 const SelectionPolicy* Plan::getSelectionPolicy(){
     return selectionPolicy; };
-
+string Plan::getSettlementName(){
+    return settlement.getName();
+};
 void setSelectionPolicy(SelectionPolicy *selectionPolicy){
     selectionPolicy = selectionPolicy; }
 
@@ -108,8 +110,7 @@ void Plan::step(){
         this->underConstruction.push_back(facility);
     }
     const string Plan::toString() const{
-        cout << "planID: " + to_string(plan_id) << endl;
-        cout << "SettlementName: " + settlement.getName() << endl;
+        cout << "planID: " + to_string(plan_id) + "SettlementName: " + settlement.getName() << endl;
         cout << "PlanStatus: " + to_string(static_cast<int>(status)) << endl;
         cout << "SelectionPolicy: " + selectionPolicy->toString() << endl;
         cout << "LifeQualityScore: " + to_string(life_quality_score) << endl;
@@ -125,4 +126,13 @@ void Plan::step(){
             cout << "FacilityName: " + facility->getName() << endl;
             cout << "FacilityStatus: " + to_string(static_cast<int>(facility->getStatus())) << endl;
         }
+    }
+    
+    //similar to toString, excluding plan status for Action::Close
+    const string Plan::toStringClose() const{
+        cout << "planID: " + to_string(plan_id) + "SettlementName: " + settlement.getName() << endl;
+        cout << "SelectionPolicy: " + selectionPolicy->toString() << endl;
+        cout << "LifeQualityScore: " + to_string(life_quality_score) << endl;
+        cout << "EconomyScore: " + to_string(economy_score) << endl;
+        cout << "EnvironmentScore: " + to_string(environment_score) << endl;
     }
