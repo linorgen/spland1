@@ -6,8 +6,10 @@ using namespace std;
 Settlement::Settlement(const string &name, SettlementType type): name(name), type(type){
     cout<<"construtor"<<endl; };
 
+
 const string &Settlement::getName() const{
     return this->name; };
+
 SettlementType Settlement::getType() const{
     return type; };
 
@@ -29,6 +31,7 @@ string Settlement::getStrType(){
     else if(type == SettlementType::METROPOLIS){
         return "METROPOLIS";}
 }
+
 
 const string Settlement::toString() const{
     return name + " " + to_string(static_cast<int>(type)); };

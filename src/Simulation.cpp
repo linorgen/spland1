@@ -16,16 +16,22 @@ using std::vector;
 using namespace std;
 
 
-
+//Simulation constructor - initiating the simulation with configFile--------------------------
 Simulation::Simulation(const string &configFilePath):planCounter(0){
+
     ifstream configFile(configFilePath);  // Open the config file for reading
+    
     if (!configFile.is_open()) {
         std::cerr << "Unable to open configuration file: " << configFilePath << std::endl;
         throw std::runtime_error("Failed to open configuration file.");
     }
+
     string line;
+
     while (getline(configFile, line)){
+
         vector<string> arguments = Auxiliary::parseArguments(line);
+        
         // Skip empty lines or instructions
         if (arguments.empty() || arguments[0] == "#") continue;  
         
@@ -61,16 +67,21 @@ Simulation::Simulation(const string &configFilePath):planCounter(0){
     configFile.close();  // Close the config file after processing
     start();
 }
+//-----------------------------------------------------------------
 
 void Simulation::start(){
+
     cout<<"The simulation has started"<<endl;
     open();
+
     //wait for user to enter actions
     while(isRunning){
+
         cout << "enter next command" << endl;
         string text;
         cin >> text;
         vector<string> input = Auxiliary::parseArguments(text);
+        
         if (input.empty())
             continue;
         else if(input[0] == "step"){
@@ -131,9 +142,10 @@ void Simulation::start(){
         else
             cout << "unkown command" << endl;
     }
-    //delete everything
+    //!!!***delete everything
 };
 
+//add------------------------------------------------------------------------------
 void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy){
     const int id = planCounter;
     planCounter++;
@@ -141,7 +153,7 @@ void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectio
     plans.push_back(p);
 };
 
-//make sure - maybe we should create a copy and then insert
+//!!***make sure - maybe we should create a copy and then insert
 void Simulation::addAction(BaseAction *action){
     actionsLog.push_back(action);
 };
@@ -149,9 +161,12 @@ void Simulation::addAction(BaseAction *action){
 bool Simulation::addSettlement(Settlement *settlement){
     settlements.push_back(settlement);
 };
+
 bool Simulation::addFacility(FacilityType facility){
     facilitiesOptions.push_back(facility);
 };
+
+//isExists---------------------------------------------------------------------
 bool Simulation::isSettlementExists(const string &settlementName){ 
     for(const Settlement* set: settlements){
         if(settlementName == set->getName()){
@@ -184,6 +199,7 @@ bool Simulation:: isPolicyExists(const string policy){
         return false;
 }
 
+//getters----------------------------------------------------------------------
 Settlement& Simulation::getSettlement(const string &settlementName){
     for(Settlement* set: settlements){
         if(settlementName == set->getName()){
@@ -192,6 +208,7 @@ Settlement& Simulation::getSettlement(const string &settlementName){
     } 
     throw invalid_argument("Settlement " + settlementName + " doesn't exist");
 };
+
 Plan& Simulation::getPlan(const int planID){
     if (planID < plans.size() && planID >= 0)
         return plans[planID];
@@ -202,6 +219,8 @@ Plan& Simulation::getPlan(const int planID){
 const vector<Plan>& Simulation::getPlanVector(){
     return plans;
 };
+//------------------------------------------------------------------------------
+
 
 void Simulation::step(){
     for(Plan p: plans){
