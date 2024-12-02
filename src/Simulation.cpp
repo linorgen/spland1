@@ -120,6 +120,14 @@ void Simulation::start(){
             closeA->act(*this);
             close();
         }
+        else if(input[0] == "backup"){
+            BackupSimulation* backup = new BackupSimulation();
+            backup->act(*this); 
+        }
+        else if(input[0] == "restore"){
+            RestoreSimulation* restore = new RestoreSimulation();
+            restore->act(*this);
+        }
         else
             cout << "unkown command" << endl;
     }

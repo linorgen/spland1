@@ -16,6 +16,7 @@ class BaseAction{
     public:
         BaseAction();
         ActionStatus getStatus() const;
+        string getStatusStr() const;
         virtual void act(Simulation& simulation)=0;
         virtual const string toString() const=0;
         virtual BaseAction* clone() const = 0;
@@ -69,7 +70,8 @@ class AddSettlement : public BaseAction {
 
 class AddFacility : public BaseAction {
     public:
-        AddFacility(const string &facilityName, const FacilityCategory facilityCategory, const int price, const int lifeQualityScore, const int economyScore, const int environmentScore);
+        AddFacility(const string &facilityName, const FacilityCategory facilityCategory,
+        const int price, const int lifeQualityScore, const int economyScore, const int environmentScore);
         void act(Simulation &simulation) override;
         AddFacility *clone() const override;
         const string toString() const override;

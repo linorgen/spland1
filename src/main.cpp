@@ -15,18 +15,18 @@ int main(int argc, char** argv){
     cout << S1.toString() << endl;
     cout << F1.toString() << endl;
     
-    if(argc!=2){
-        cout << "usage: simulation <config_path>" << endl;
-        return 0;
-    }
-    string configurationFile = argv[1];
-    Simulation simulation(configurationFile);
-    simulation.start();
-    // if(backup!=nullptr){
-    //     delete backup;
-    //     backup = nullptr;
+    // if(argc!=2){
+    //     cout << "usage: simulation <config_path>" << endl;
+    //     return 0;
     // }
-    return 0;
+    // string configurationFile = argv[1];
+    // Simulation simulation(configurationFile);
+    // simulation.start();
+    // // if(backup!=nullptr){
+    // //     delete backup;
+    // //     backup = nullptr;
+    // // }
+    // return 0;
 
 
 }

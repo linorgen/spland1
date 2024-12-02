@@ -21,6 +21,15 @@ const int Settlement::getLimit() const{
     return -1;
 }
 
+string Settlement::getStrType(){
+    if(type == SettlementType::VILLAGE){
+        return "VILLAGE";}
+    else if(type == SettlementType::CITY){
+        return "CITY";}
+    else if(type == SettlementType::METROPOLIS){
+        return "METROPOLIS";}
+}
+
 const string Settlement::toString() const{
     return name + " " + to_string(static_cast<int>(type)); };
 

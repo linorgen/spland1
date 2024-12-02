@@ -11,6 +11,13 @@ using namespace std;
 //BaseAction
     BaseAction::BaseAction():errorMsg(""),status(ActionStatus::COMPLETED){};
     ActionStatus BaseAction::getStatus() const{ return status; };
+    string BaseAction::getStatusStr() const{ 
+        if(status == ActionStatus::COMPLETED)
+        return "COMPLETED";
+        else if (status == ActionStatus::ERROR)
+            return "ERROR";
+    };
+
     void BaseAction::complete(){ status = ActionStatus::COMPLETED; };
     void BaseAction::error(string errorMsg) { 
         status = ActionStatus::ERROR;
@@ -30,8 +37,8 @@ using namespace std;
             stepsLeft--;
         }
     };
-    const string SimulateStep::toString() const override{
-        //for the log
+    const string SimulateStep::toString() const{
+        return "simulateStep " + to_string(numOfSteps) + " "+ getStatusStr();
     } ;
     SimulateStep SimulateStep:: *clone() const override{
         //for the log
@@ -50,7 +57,8 @@ using namespace std;
             simulation.addPlan(set, policy);
         }
     };
-    const string AddPlan::toString() const override{
+    const string AddPlan::toString() const{
+        return "plan " + settlementName + " " + selectionPolicy + " "+ getStatusStr();  
         //for the log
     };
     AddPlan* AddPlan::clone() const override;
@@ -67,10 +75,20 @@ using namespace std;
             simulation.addSettlement(newSet);
         }
     } ;
-    AddSettlement* AddSettlement::clone() const override;
+    AddSettlement* AddSettlement::clone() const override{
         //for the log
-    const string AddSettlement::toString() const override;
-        //for the log
+    };
+        
+    const string AddSettlement::toString() const{
+        string type;
+        if(settlementType == SettlementType::VILLAGE){
+            type = "VILLAGE";}
+        else if(settlementType == SettlementType::CITY){
+            type = "CITY";}
+        else if(settlementType == SettlementType::METROPOLIS){
+            type = "METROPOLIS";}
+        return "settlement " + settlementName + " " + type + " "+ getStatusStr();
+    };
 
 //AddFacility
     AddFacility::AddFacility(const string &facilityName, const FacilityCategory facilityCategory, const int price, const int lifeQualityScore, const int economyScore, const int environmentScore):
@@ -84,8 +102,12 @@ using namespace std;
             simulation.addFacility(newf);
         }
     } ;
-    AddFacility* AddFacility::clone() const override;
-    const string AddFacility::toString() const override;
+    AddFacility* AddFacility::clone() const {};
+    const string AddFacility::toString() const{
+        int category = static_cast<int>(facilityCategory);
+        return "facility " + facilityName + to_string(category) + " " + to_string(price)+ " " 
+        + to_string(lifeQualityScore) + " " + to_string(economyScore) + " " + to_string(environmentScore) + " "+ getStatusStr(); 
+    };
 
 //PrintPlanStatus
     PrintPlanStatus::PrintPlanStatus(int planId):planId(planId){};
@@ -96,9 +118,11 @@ using namespace std;
         else{
             BaseAction::error("Plan doesn't exsist"); // set error message
         }
-         };
-    PrintPlanStatus* PrintPlanStatus::clone() const override;
-    const string PrintPlanStatus::toString() const override;
+    };
+    PrintPlanStatus* PrintPlanStatus::clone() const {};
+    const string PrintPlanStatus::toString() const {
+        return "planStatus " + to_string(planId) + " "+ getStatusStr();
+    };
 
 //ChangePlanPolicy
     ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy):planId(planId), newPolicy(newPolicy){};
@@ -112,29 +136,39 @@ using namespace std;
             (simulation.getPlan(planId)).setSelectionPolicy(newPol);
         }
     };
-    ChangePlanPolicy* ChangePlanPolicy::clone() const override;
-    const string ChangePlanPolicy::toString() const override;
+    ChangePlanPolicy* ChangePlanPolicy::clone() const {};
+    const string ChangePlanPolicy::toString() const {
+        return "changePolicy " + to_string(planId) + " " + newPolicy + " " + getStatusStr();
+    };
 
 //PrintActionsLog
-    PrintActionsLog();
-    void act(Simulation &simulation) override;
-    PrintActionsLog *clone() const override;
-    const string toString() const override;
+    PrintActionsLog::PrintActionsLog();
+    void PrintActionsLog::act(Simulation &simulation) override;
+    PrintActionsLog* PrintActionsLog::clone() const {};
+    const string PrintActionsLog::toString() const {
+        return "printLog " + getStatusStr();
+    };
 
 //Close
-    Close();
-    void act(Simulation &simulation) override;
-    Close *clone() const override;
-    const string toString() const override;
+    Close::Close(){};
+    void Close::act(Simulation &simulation) {};
+    Close* Close::clone() const {};
+    const string Close::toString() const {
+        return "close " + getStatusStr();
+    };
 
 //BackupSimulation
-    BackupSimulation();
-    void act(Simulation &simulation) override;
-    BackupSimulation *clone() const override;
-    const string toString() const override;
+    BackupSimulation::BackupSimulation(){};
+    void BackupSimulation::act(Simulation &simulation) {};
+    BackupSimulation* BackupSimulation::clone() const {};
+    const string BackupSimulation::toString() const {
+        return "backup " + getStatusStr();
+    };
 
 //RestoreSimulation
-    RestoreSimulation();
-    void act(Simulation &simulation) override;
-    RestoreSimulation *clone() const override;
-    const string toString() const override;
+    RestoreSimulation::RestoreSimulation(){};
+    void RestoreSimulation::act(Simulation &simulation) {};
+    RestoreSimulation* RestoreSimulation::clone() const {};
+    const string RestoreSimulation::toString() const {
+        return "restore" + getStatusStr();
+    };

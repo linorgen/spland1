@@ -11,8 +11,8 @@ SRC_DIR = src
 BIN_DIR = bin
 
 # Source files and object files
-SRCS = $(SRC_DIR)/main.cpp $(SRC_DIR)/Settlement.cpp $(SRC_DIR)/Facility.cpp $(SRC_DIR)/SelectionPolicy.cpp $(SRC_DIR)/Plan.cpp $(SRC_DIR)/Simulation.cpp $(SRC_DIR)/Actions.cpp $(SRC_DIR)/Auxiliary.cpp
-OBJS = $(BIN_DIR)/main.o $(BIN_DIR)/Settlement.o $(BIN_DIR)/Facility.o $(BIN_DIR)/SelectionPolicy.o $(BIN_DIR)/Plan.o $(BIN_DIR)/Simulation.o $(BIN_DIR)/Action.o $(BIN_DIR)/Auxiliary.o
+SRCS = $(SRC_DIR)/main.cpp $(SRC_DIR)/Settlement.cpp 
+OBJS = $(BIN_DIR)/main.o $(BIN_DIR)/Settlement.o $(BIN_DIR)/Facility.o 
 
 # Output executable
 TARGET = $(BIN_DIR)/program
