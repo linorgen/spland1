@@ -7,6 +7,7 @@
 #include "../include/Simulation.h"
 #include <iostream>
 using namespace std;
+extern Simulation* backup;
 
 //BaseAction-----------------------------------------------------------------------
     BaseAction::BaseAction():errorMsg(""),status(ActionStatus::COMPLETED){};

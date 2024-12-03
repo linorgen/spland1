@@ -50,7 +50,6 @@ Plan::Plan(const int planId,
 Plan::Plan(const Plan &other, const int thisplanId): 
                 plan_id(thisplanId), 
                 settlement(other.settlement), 
-                selectionPolicy(other.selectionPolicy), 
                 facilityOptions(other.facilityOptions),
                     life_quality_score(other.life_quality_score), 
                     economy_score(other.economy_score), 
@@ -62,23 +61,41 @@ Plan::Plan(const Plan &other, const int thisplanId):
     for(const Facility* UCpointer: other.underConstruction){
         this->underConstruction.push_back(new Facility(*UCpointer));
     }
+    selectionPolicy = other.selectionPolicy->clone();
  }
 
 
 // Destructor -*****CHECK!
- Plan::~Plan() {
+ Plan::~Plan(){
+    if(this == nullptr){
+        return;
+    }
     // Clean up facilities
     for (Facility* facility : facilities) {
         delete facility;
     }
-    facilities.clear();
 
     // Clean up underConstruction
     for (Facility* facility : underConstruction) {
         delete facility;
     }
-    underConstruction.clear();
+    
+    delete selectionPolicy;
 }
+
+//Move constructor
+Plan::Plan(Plan&& other) noexcept:
+                plan_id(other.plan_id), 
+                settlement(other.settlement), 
+                selectionPolicy(other.selectionPolicy),
+                facilityOptions(other.facilityOptions),
+                life_quality_score(other.life_quality_score), 
+                economy_score(other.economy_score), 
+                environment_score(other.environment_score),
+                facilities(move(other.facilities)),
+                underConstruction(move(other.underConstruction)){
+        other.selectionPolicy = nullptr;
+    }
 
 //Getters--------------------------------------------------
 const int Plan::getlifeQualityScore() const{
