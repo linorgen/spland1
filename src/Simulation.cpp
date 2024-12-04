@@ -68,6 +68,58 @@ Simulation::Simulation(const string &configFilePath):
     start();
 }
 //-----------------------------------------------------------------
+// Destructor
+Simulation::~Simulation(){
+    for(BaseAction* action:actionsLog){
+        if(action)
+            delete action;
+    }
+    for(Settlement* set:settlements){
+        if(set)
+            delete set;
+    }
+}
+// Copy constructor
+Simulation::Simulation(const Simulation& other): 
+                            isRunning(other.isRunning),
+                            planCounter(other.planCounter),
+                            actionsLog(),
+                            plans(),
+                            settlements(),
+                            facilitiesOptions(){
+    for(BaseAction* action:other.actionsLog){
+        actionsLog.push_back(action->clone());
+    }
+    for(Settlement* set:other.settlements){
+        settlements.push_back(new Settlement(*set));
+    }
+    for(FacilityType fac: other.facilitiesOptions){
+        facilitiesOptions.push_back(FacilityType(fac));
+    }
+    for(Plan otherPlan:other.plans){
+        int thisID = otherPlan.getPlanId();
+        Settlement *thisSet = &(getSettlement(otherPlan.getSettlementName()));
+        //check if we need to delete the pointer we received 
+        SelectionPolicy *thispol = (otherPlan.getSelectionPolicy())->clone();
+        plans.push_back(Plan(thisID, *thisSet, thispol, facilitiesOptions));
+    }
+}  
+// Move constructor
+Simulation::Simulation(Simulation&& other) noexcept: 
+                    isRunning(other.isRunning),
+                    planCounter(other.planCounter),
+                    actionsLog(move(other.actionsLog)),
+                    plans(move(other.plans)),
+                    settlements(move(other.settlements)),
+                    facilitiesOptions(move(other.facilitiesOptions)) {
+    other.isRunning = false;
+    other.planCounter = 0;
+}
+// Copy assignment operator
+Simulation& Simulation::operator=(const Simulation& other){}
+
+// Move assignment operator
+Simulation& Simulation::operator=(Simulation&& other) noexcept;  
 
 void Simulation::start(){
 
@@ -159,11 +211,20 @@ void Simulation::addAction(BaseAction *action){
 };
 
 bool Simulation::addSettlement(Settlement *settlement){
+    if(isSettlementExists(settlement->getName())){
+        delete settlement;
+        return false;
+    }
     settlements.push_back(settlement);
+    return true;
 };
 
 bool Simulation::addFacility(FacilityType facility){
+    if(isFacilityExists(facility.getName())){
+        return false;
+    }
     facilitiesOptions.push_back(facility);
+    return true;
 };
 
 //isExists---------------------------------------------------------------------

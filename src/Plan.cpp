@@ -180,7 +180,7 @@ void Plan::step(){
 void Plan::printStatus(){
     cout << to_string(static_cast<int>(status)) << endl; }
 
-void setSelectionPolicy(SelectionPolicy *selectionPolicy){
+void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy){
     selectionPolicy = selectionPolicy; }
 
 void Plan::addFacility(Facility* facility){

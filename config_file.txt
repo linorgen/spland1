@@ -19,10 +19,3 @@ facility WildlifeReserve 2 4 2 1 4
 plan KfarSPL eco
 plan KfarSPL bal
 plan KiryatSPL bal
-
-to run main in terminal:
-g++ -std=c++11 -Wall -c src/main.cpp -o bin/main.o
-g++ -std=c++11 -Wall -c src/Settlement.cpp -o bin/Settlement.o
-g++ -std=c++11 -Wall -c src/Facility.cpp -o bin/Facility.o-
-g++ -std=c++11 -o ./bin/program ./bin/main.o ./bin/Settlement.o ./bin/Facility.o 
-./bin/program

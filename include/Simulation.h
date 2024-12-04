@@ -15,7 +15,13 @@ class SelectionPolicy;
 
 class Simulation {
     public:
-        Simulation(const string &configFilePath);
+        Simulation(const string &configFilePath); //constructor
+        ~Simulation();  // Destructor
+        Simulation(const Simulation& other);  // Copy constructor
+        Simulation& operator=(const Simulation& other);  // Copy assignment operator
+        Simulation(Simulation&& other) noexcept;  // Move constructor
+        Simulation& operator=(Simulation&& other) noexcept;  // Move assignment operator
+        
         void start();
         void addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy);
         void addAction(BaseAction *action);
@@ -24,7 +30,7 @@ class Simulation {
         bool isSettlementExists(const string &settlementName);
         bool isFacilityExists(const string &facilityName);
         bool isPlanExists(const int planId);
-            bool isPolicyExists(const string policy);
+        bool isPolicyExists(const string policy);
         Settlement &getSettlement(const string &settlementName);
         Plan &getPlan(const int planID);
         const vector<Plan>& getPlanVector(); 
