@@ -16,6 +16,7 @@ class Plan {
         Plan(const Plan &other, const int planId);
         Plan(const int planId, const Settlement &settlement, const string &selectionPolicy, const vector<FacilityType> &facilityOptions); 
         ~Plan();
+        Plan(const Plan &other); //copy constructor
         Plan(Plan&& other); //move constructor
         Plan& operator = (const Plan&) = delete; //deleted copy assignment operator
         Plan& operator = (Plan&&) = delete; //deleted move assignment operator

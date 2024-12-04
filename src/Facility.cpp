@@ -72,29 +72,24 @@ using namespace std;
                         const int lifeQuality_score, 
                         const int economy_score, 
                         const int environment_score): 
-                            
-                        FacilityType(name, 
-                                    category, 
-                                    price, 
-                                    lifeQuality_score, 
-                                    economy_score, 
-                                    environment_score),
-                                
-                        settlementName(settlementName){
-
-        status = FacilityStatus:: UNDER_CONSTRUCTIONS;
-        timeLeft = price;
-    }
+                            FacilityType(name, 
+                                        category, 
+                                        price, 
+                                        lifeQuality_score, 
+                                        economy_score, 
+                                        environment_score),
+                                    
+                            settlementName(settlementName),
+                            status(FacilityStatus:: UNDER_CONSTRUCTIONS),
+                            timeLeft(price){}
 
     //copy constructor that gets FacilityType
     Facility::Facility(const FacilityType &type, 
                         const string &settlementName): 
                             FacilityType(type), 
-                            settlementName(settlementName){
-
-        status = FacilityStatus:: UNDER_CONSTRUCTIONS;
-        timeLeft = price;
-    }
+                            settlementName(settlementName),
+                            status(FacilityStatus:: UNDER_CONSTRUCTIONS),
+                            timeLeft(price){}
 
     //copy constructor that gets Facility
     Facility::Facility(const Facility &other): FacilityType(other), 

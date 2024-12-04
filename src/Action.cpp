@@ -1,9 +1,4 @@
-
-#include "../include/Plan.h"
-#include "../include/Settlement.h"
-#include "../include/Facility.h"
 #include "../include/Action.h"
-#include "../include/SelectionPolicy.h"
 #include "../include/Simulation.h"
 #include <iostream>
 using namespace std;
@@ -19,6 +14,7 @@ extern Simulation* backup;
             return "COMPLETED";
         else if (status == ActionStatus::ERROR)
             return "ERROR";
+        return "No status allocated";
     };
 
     void BaseAction::complete(){ 
@@ -146,7 +142,7 @@ extern Simulation* backup;
     
     void PrintPlanStatus::act(Simulation &simulation){
         if(simulation.isPlanExists(planId)){
-            (simulation.getPlan(planId)).toString(); 
+            cout << (simulation.getPlan(planId)).toString() << endl; 
         }
         else{
             BaseAction::error("Plan doesn't exsist"); 
@@ -217,7 +213,7 @@ extern Simulation* backup;
         
         for(Plan plan : simulation.getPlanVector()){
             int planId = plan.getPlanId();
-            simulation.getPlan(planId).toStringClose();
+            cout << simulation.getPlan(planId).toStringClose() << endl;
         }
         
     };

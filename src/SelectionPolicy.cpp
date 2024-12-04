@@ -1,9 +1,8 @@
 #include "../include/SelectionPolicy.h"
-#pragma once
 #include <vector>
-#include "../include/Facility.h"
 using std::vector;
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 //convert selectionPolicy string to selectionPolicy
@@ -34,7 +33,7 @@ using namespace std;
     //select next facility to build
     const FacilityType& NaiveSelection::selectFacility(const vector<FacilityType>& facilitiesOptions){
 
-        if(lastSelectedIndex == facilitiesOptions.size())
+        if(static_cast<size_t>(lastSelectedIndex) == facilitiesOptions.size())
             lastSelectedIndex = -1;
         lastSelectedIndex++;
         return facilitiesOptions[lastSelectedIndex]; 
@@ -73,7 +72,7 @@ using namespace std;
 
         const FacilityType* best = &facilitiesOptions[0];
         
-        for(int i = 1; i<facilitiesOptions.size(); i++){
+        for(size_t i = 1; i<facilitiesOptions.size(); i++){
 
             if (distance(facilitiesOptions[i]) < distance(*best))
                 best = &facilitiesOptions[i];
@@ -87,8 +86,7 @@ using namespace std;
         int lifeq = LifeQualityScore + facility.getLifeQualityScore();
         int eco = EconomyScore + facility.getEconomyScore();
         int envi = EnvironmentScore + facility.getEnvironmentScore();
-        return max(lifeq, eco, envi) - min(lifeq, eco, envi);
-
+        return max({lifeq, eco, envi}) - min({lifeq, eco, envi});
     }
 
     const string BalancedSelection::toString() const{
@@ -104,8 +102,8 @@ using namespace std;
     
     //constructor
     EconomySelection::EconomySelection(): lastSelectedIndex(-1){};
-    //copy constructor
     
+    //copy constructor
     EconomySelection::EconomySelection(const EconomySelection &other): lastSelectedIndex(other.lastSelectedIndex){};
     
     //select next facility to build
@@ -116,9 +114,9 @@ using namespace std;
         
         while(!found){
             index++;
-            if((index < facilitiesOptions.size()) && (facilitiesOptions[index].getCategory() == FacilityCategory::ECONOMY))
+            if((static_cast<size_t>(index) < facilitiesOptions.size()) && (facilitiesOptions[index].getCategory() == FacilityCategory::ECONOMY))
                 found = true;
-            else if(index >= facilitiesOptions.size())
+            else if(static_cast<size_t>(index) >= facilitiesOptions.size())
                 index = -1;
         }
         lastSelectedIndex = index;
@@ -151,9 +149,9 @@ using namespace std;
         while(!found){
             index++;
             
-            if((index < facilitiesOptions.size()) &&(facilitiesOptions[index].getCategory() == FacilityCategory::ENVIRONMENT))
+            if((static_cast<size_t>(index) < facilitiesOptions.size()) &&(facilitiesOptions[index].getCategory() == FacilityCategory::ENVIRONMENT))
                 found = true;
-            else if(index >= facilitiesOptions.size())
+            else if(static_cast<size_t>(index) >= facilitiesOptions.size())
                 index = -1;
         }
         lastSelectedIndex = index;

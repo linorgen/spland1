@@ -1,15 +1,10 @@
+#include "../include/Simulation.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
 #include <string>
 #include <stdexcept>
-#include "../include/Auxiliary.h"
-#include "../include/Settlement.h"
-#include "../include/Facility.h"
-#include "../include/Plan.h"
-#include "../include/SelectionPolicy.h"
-#include "../include/Simulation.h"
 #include <Action.h>
 using std::string;
 using std::vector;
@@ -17,8 +12,13 @@ using namespace std;
 
 
 //Simulation constructor - initiating the simulation with configFile--------------------------
-Simulation::Simulation(const string &configFilePath):planCounter(0){
-
+Simulation::Simulation(const string &configFilePath):
+                            isRunning(false),
+                            planCounter(0),
+                            actionsLog(),
+                            plans(),
+                            settlements(),
+                            facilitiesOptions(){
     ifstream configFile(configFilePath);  // Open the config file for reading
     
     if (!configFile.is_open()) {
@@ -186,7 +186,7 @@ bool Simulation::isFacilityExists(const string &facilityName){
 };
 
 bool Simulation::isPlanExists(const int planId){
-    if (planId < plans.size() && planId >= 0)
+    if (static_cast<size_t>(planId) < plans.size() && planId >= 0)
         return true;
     else
         return false;
@@ -210,7 +210,7 @@ Settlement& Simulation::getSettlement(const string &settlementName){
 };
 
 Plan& Simulation::getPlan(const int planID){
-    if (planID < plans.size() && planID >= 0)
+    if (static_cast<size_t>(planID) < plans.size() && planID >= 0)
         return plans[planID];
     else
         throw invalid_argument("Plan " + to_string(planID) + " doesn't exist");

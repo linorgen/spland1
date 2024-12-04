@@ -30,6 +30,7 @@ string Settlement::getStrType(){
         return "CITY";}
     else if(type == SettlementType::METROPOLIS){
         return "METROPOLIS";}
+    return "Settlement: No type allocated";
 }
 
 

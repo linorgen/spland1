@@ -3,10 +3,12 @@
 #include <vector>
 #include "Settlement.h"
 #include "SelectionPolicy.h"
-#include "Simulation.h"
+#include "../include/Simulation.h"
 #include "Plan.h"
+#include "Auxiliary.h"
 enum class FacilityCategory;
 enum class SettlementType;
+class Simulation;
 
 enum class ActionStatus{
     COMPLETED, ERROR

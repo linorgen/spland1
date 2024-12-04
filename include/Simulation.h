@@ -4,6 +4,9 @@
 #include "Facility.h"
 #include "Plan.h"
 #include "Settlement.h"
+#include "../include/Action.h"
+#include "Auxiliary.h"
+#include "SelectionPolicy.h"
 using std::string;
 using std::vector;
 
