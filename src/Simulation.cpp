@@ -10,6 +10,7 @@ using std::string;
 using std::vector;
 using namespace std;
 
+//dalia - delete later
 
 //Simulation constructor - initiating the simulation with configFile--------------------------
 Simulation::Simulation(const string &configFilePath):
