@@ -2,7 +2,7 @@
 #include "../include/Simulation.h"
 #include <iostream>
 using namespace std;
-extern Simulation* backup;
+extern Simulation* backup = nullptr;
 
 //BaseAction-----------------------------------------------------------------------
     BaseAction::BaseAction():errorMsg(""),status(ActionStatus::COMPLETED){};
@@ -194,7 +194,8 @@ extern Simulation* backup;
     PrintActionsLog::PrintActionsLog(){};
     
     void PrintActionsLog::act(Simulation &simulation) {
-        //print actions log mimush
+        for(const BaseAction* action : simulation.getActionsLog())
+            cout<< action->toString() << endl;
         simulation.addAction(this->clone());
     };
     
@@ -230,7 +231,10 @@ extern Simulation* backup;
     BackupSimulation::BackupSimulation(){};
     
     void BackupSimulation::act(Simulation &simulation) {
-        //deep copy to simulation
+        if(backup == nullptr)
+            backup = new Simulation(simulation);
+        else
+            backup = &simulation;
         simulation.addAction(this->clone());
     };
     
@@ -245,7 +249,7 @@ extern Simulation* backup;
 //RestoreSimulation-----------------------------------------------------------------------
     RestoreSimulation::RestoreSimulation(){};
     void RestoreSimulation::act(Simulation &simulation) {
-        //lemamesh
+        simulation = *backup;
         simulation.addAction(this->clone());
     };
     RestoreSimulation* RestoreSimulation::clone() const {

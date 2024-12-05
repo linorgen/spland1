@@ -339,9 +339,14 @@ Plan& Simulation::getPlan(const int planID){
         throw invalid_argument("Plan " + to_string(planID) + " doesn't exist");
 };
 
-const vector<Plan>& Simulation::getPlanVector(){
+const vector<Plan>& Simulation::getPlanVector() const{
     return plans;
 };
+
+const vector<BaseAction*>& Simulation::getActionsLog() const{
+    return actionsLog;
+}
+
 //------------------------------------------------------------------------------
 
 

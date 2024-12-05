@@ -33,7 +33,8 @@ class Simulation {
         bool isPolicyExists(const string policy);
         Settlement &getSettlement(const string &settlementName);
         Plan &getPlan(const int planID);
-        const vector<Plan>& getPlanVector(); 
+        const vector<BaseAction*>& getActionsLog() const;
+        const vector<Plan>& getPlanVector() const; 
         void step();
         void close();
         void open();
