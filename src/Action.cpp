@@ -33,7 +33,6 @@ extern Simulation* backup;
 
     void SimulateStep::act(Simulation &simulation){
         int stepsLeft = numOfSteps;
-        cout << "simulatestep" + to_string(numOfSteps) << endl;
         while(stepsLeft != 0){
             simulation.step();
             stepsLeft--;
@@ -146,7 +145,6 @@ extern Simulation* backup;
     PrintPlanStatus::PrintPlanStatus(int planId):planId(planId){};
     
     void PrintPlanStatus::act(Simulation &simulation){
-        cout << "enetered printplanstatus act, id: " + to_string(planId) << endl;
         if(simulation.isPlanExists(planId)){
             cout << (simulation.getPlan(planId)).toString() << endl;
             complete(); 
@@ -221,11 +219,12 @@ extern Simulation* backup;
     Close::Close(){};
     
     void Close::act(Simulation &simulation) {
-        cout << "entered baseAction close" << endl;
+        
         for(const Plan& plan : simulation.getPlanVector()){
             int planId = plan.getPlanId();
             cout << simulation.getPlan(planId).toStringClose() << endl;
         }
+        simulation.close();
         complete();
     };
     //add clone to actionslog?

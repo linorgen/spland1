@@ -1,0 +1,18 @@
+# settlement <settlement_name> <settlement_type> 
+settlement Vil1 0
+settlement Cit2 1
+settlement Met3 2
+# facility <facility_name> <category> <price> <lifeq_impact> <eco_impact> <env_impact>
+facility Hospital 0 5 5 3 2
+facility School 0 4 4 2 2
+
+facility Factory 1 5 2 5 1
+facility Market 1 4 3 3 1
+
+facility WaterTreatmentPlant 2 3 1 4 1
+facility BearsHouse 2 4 2 1 2
+# plan <settlement_name> <selection_policy>
+plan Met3 eco
+plan Met3 bal
+plan Met3 nve
+plan Met3 env

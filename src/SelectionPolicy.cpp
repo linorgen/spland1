@@ -39,7 +39,7 @@ using namespace std;
     }
 
     const string NaiveSelection::toString() const{
-        return to_string(lastSelectedIndex); }
+        return "nve"; }
 
     const int NaiveSelection::getLastIndex() const{
         return lastSelectedIndex; }

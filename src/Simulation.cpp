@@ -1,11 +1,11 @@
 #include "../include/Simulation.h"
+#include "../include/Action.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
 #include <string>
 #include <stdexcept>
-#include <Action.h>
 using std::string;
 using std::vector;
 using namespace std;
@@ -185,15 +185,14 @@ void Simulation::start(){
 
     cout<<"The simulation has started"<<endl;
     open();
-
+    int enteredClose = 0; //TODO delete later
     //wait for user to enter actions
-    while(isRunning){
+    while(this->isRunning){
         cout << "enter next command" << endl;
         string text = "";
         getline(cin, text);
 
         vector<string> input = Auxiliary::parseArguments(text);
-
 
         if (input.empty())
             continue;
@@ -239,11 +238,12 @@ void Simulation::start(){
             PrintActionsLog* log = new PrintActionsLog();
             log->act(*this);
         }
-        else if(input[0] == "close"){
+        else if(input[0] == "close" || input[0] == "Close"){
+            close();
+            enteredClose++; //TODO delete
             Close* closeA = new Close();
             closeA->act(*this);
-            close();
-            cout << "you asked to close" << endl;
+            cout << "you asked to close " + to_string(enteredClose) + "times" << endl; //TODO delete cout
         }
         else if(input[0] == "backup"){
             BackupSimulation* backup = new BackupSimulation();
@@ -256,7 +256,6 @@ void Simulation::start(){
         else
             cout << "unkown command" << endl;
     }
-    //!!!***delete everything
 };
 
 //add------------------------------------------------------------------------------
@@ -351,7 +350,6 @@ const vector<BaseAction*>& Simulation::getActionsLog() const{
 
 
 void Simulation::step(){
-    cout << "simulation step" << endl;
     for(Plan& p: plans){
         p.step();
     }

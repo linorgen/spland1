@@ -19,7 +19,7 @@ clean:
 
 # Run the program with the config path argument
 run:
-	./bin/main config_file.txt 
+	./bin/main config_file2.txt 
 	@echo "Program finished."
 
 # Optional run with valgrind: Uncomment the next line if you want to run with valgrind

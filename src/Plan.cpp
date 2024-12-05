@@ -146,28 +146,34 @@ const vector<Facility*>& Plan::getFacilities() const{
 
 //step()---------------------------------------------------------
 void Plan::step(){
-    cout << "plan step" << endl;
     //step 2
     //if available, add facilities according to the selection policy
     if (status == PlanStatus:: AVALIABLE){ 
+        
         while(underConstruction.size() < static_cast<size_t>(settlement.Settlement::getLimit())){
-
+            cout << "****plan id: " + to_string(plan_id) << endl;
+            cout << "**UC size = " + to_string(underConstruction.size()) << endl;
+            cout << "**limit = " + to_string(static_cast<size_t>(settlement.Settlement::getLimit())) << endl;
             const FacilityType& nextR = selectionPolicy->selectFacility(facilityOptions);
+            cout << "**nextFacType: " + nextR.getName() << endl;
             Facility* next = new Facility(nextR, settlement.getName());
-            underConstruction.push_back(next); 
+            // underConstruction.push_back(next);
+            underConstruction.emplace_back(next); 
+            cout << "**UC after = " + to_string(underConstruction.size()) << endl;
         }
     }
     //step 3
     //iterat ethrough all facilities under construction and advance a step
     //if they become operational, move to facilities vector
-    for(size_t i = 0; i < underConstruction.size(); i++){
+    for(int i = static_cast<int>(underConstruction.size())-1; i >= 0; i--){
         underConstruction[i]->step();
 
         if(underConstruction[i]->getStatus() == FacilityStatus::OPERATIONAL){
-            facilities.push_back(underConstruction[i]);
             life_quality_score += underConstruction[i]->getLifeQualityScore();
             economy_score += underConstruction[i]->getEconomyScore();
             environment_score += underConstruction[i]->getEnvironmentScore();
+            
+            facilities.emplace_back(underConstruction[i]);
             underConstruction.erase(underConstruction.begin() + i);
         }
     }
@@ -178,7 +184,7 @@ void Plan::step(){
     else
         status = PlanStatus::AVALIABLE;   
 }
-//--------------------------end of step()--------------------------------------------
+//--------------------------end of step--------------------------------------------
 //-----------------------------------------------------------------------------------
 
 void Plan::printStatus(){
@@ -198,7 +204,8 @@ const string Plan::toString() const {
     string result;
 
     //basic information
-    result += "planID: " + to_string(plan_id) + " SettlementName: " + settlement.getName() + "\n";
+    result += "planID: " + to_string(plan_id) + "\n"; 
+    result += "SettlementName: " + settlement.getName() + "\n";
     result += "PlanStatus: " + to_string(static_cast<int>(status)) + "\n";
     result += "SelectionPolicy: " + selectionPolicy->toString() + "\n";
     result += "LifeQualityScore: " + to_string(life_quality_score) + "\n";
@@ -208,9 +215,10 @@ const string Plan::toString() const {
     // under-construction facilities
     result += "Facilities Under Construction:\n";
     for (const Facility* facility : underConstruction) {
-        cout << "entered underconstruction loop" << endl;
+        
         result += "  FacilityName: " + facility->getName() + "\n";
         result += "  FacilityStatus: " + to_string(static_cast<int>(facility->getStatus())) + "\n";
+        result += " ***timeLeft: " + to_string(facility->getTimeLeft()) + "\n";
     }
 
     //operational facilities
@@ -219,7 +227,6 @@ const string Plan::toString() const {
         result += "  FacilityName: " + facility->getName() + "\n";
         result += "  FacilityStatus: " + to_string(static_cast<int>(facility->getStatus())) + "\n";
     }
-    cout << "completed plan.toString" + to_string(plan_id) << endl;
     return result;
 }
 
