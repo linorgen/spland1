@@ -9,6 +9,7 @@
 using std::string;
 using std::vector;
 using namespace std;
+extern Simulation* backup;
 
 //Simulation constructor - initiating the simulation with configFile--------------------------
 Simulation::Simulation(const string &configFilePath):
@@ -46,7 +47,7 @@ Simulation::Simulation(const string &configFilePath):
             addSettlement(set);
         }
         
-        else if (arguments[0] == "Facility"){
+        else if (arguments[0] == "facility"){
             FacilityCategory category;
             if(arguments[2] == "0")
                 category = FacilityCategory::LIFE_QUALITY;
@@ -58,7 +59,7 @@ Simulation::Simulation(const string &configFilePath):
             addFacility(fac);
         }
         
-        else if (arguments[0] == "Plan") {
+        else if (arguments[0] == "plan") {
             SelectionPolicy* pol = SelectionPolicy::strToPolicy(arguments[2]);
             addPlan(getSettlement(arguments[1]), pol);
         }
@@ -189,11 +190,9 @@ void Simulation::start(){
     while(isRunning){
         cout << "enter next command" << endl;
         string text = "";
-        cin >> text;
-        cout<<"received input"<<endl;
+        getline(cin, text);
 
         vector<string> input = Auxiliary::parseArguments(text);
-        cout<<"Auxilirated"<<endl;
 
 
         if (input.empty())
@@ -244,6 +243,7 @@ void Simulation::start(){
             Close* closeA = new Close();
             closeA->act(*this);
             close();
+            cout << "you asked to close" << endl;
         }
         else if(input[0] == "backup"){
             BackupSimulation* backup = new BackupSimulation();
@@ -263,7 +263,7 @@ void Simulation::start(){
 void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy){
     const int id = planCounter;
     planCounter++;
-    Plan p = Plan( id,  settlement, selectionPolicy, this->facilitiesOptions );
+    Plan p = Plan( id, settlement, selectionPolicy, this->facilitiesOptions);
     plans.push_back(p);
 };
 
@@ -351,6 +351,7 @@ const vector<BaseAction*>& Simulation::getActionsLog() const{
 
 
 void Simulation::step(){
+    cout << "simulation step" << endl;
     for(Plan& p: plans){
         p.step();
     }
@@ -362,5 +363,4 @@ void Simulation::open(){
 
 void Simulation::close(){
     isRunning = false;
-
 };

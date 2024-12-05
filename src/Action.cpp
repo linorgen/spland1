@@ -2,7 +2,7 @@
 #include "../include/Simulation.h"
 #include <iostream>
 using namespace std;
-extern Simulation* backup = nullptr;
+extern Simulation* backup;
 
 //BaseAction-----------------------------------------------------------------------
     BaseAction::BaseAction():errorMsg(""),status(ActionStatus::COMPLETED){};
@@ -33,10 +33,12 @@ extern Simulation* backup = nullptr;
 
     void SimulateStep::act(Simulation &simulation){
         int stepsLeft = numOfSteps;
+        cout << "simulatestep" + to_string(numOfSteps) << endl;
         while(stepsLeft != 0){
             simulation.step();
             stepsLeft--;
         }
+        complete();
         simulation.addAction(this->clone());
     };
 
@@ -56,10 +58,11 @@ extern Simulation* backup = nullptr;
             Settlement& set = simulation.getSettlement(settlementName);
             SelectionPolicy *policy = SelectionPolicy::strToPolicy(selectionPolicy);
             simulation.addPlan(set, policy);
+            complete();
         }
         else{
-            BaseAction::error("Cannot create this plan"); 
-            cout<< getErrorMsg() << endl;
+            error("Cannot create this plan"); 
+            cout<< "ERROR: " + getErrorMsg() << endl;
         }
         simulation.addAction(this->clone());
     };
@@ -78,11 +81,12 @@ extern Simulation* backup = nullptr;
     void AddSettlement::act(Simulation &simulation){
         if(simulation.isSettlementExists(settlementName)){
             BaseAction::error("Settlment already exsists"); 
-            cout<< getErrorMsg() << endl;
+            cout<< "ERROR: " + getErrorMsg() << endl;
         }
         else{
             Settlement* newSet = new Settlement(settlementName, settlementType);
             simulation.addSettlement(newSet);
+            complete();
         }
         simulation.addAction(this->clone());
     };
@@ -107,21 +111,22 @@ extern Simulation* backup = nullptr;
                             const FacilityCategory facilityCategory, 
                             const int price, const int lifeQualityScore, 
                             const int economyScore, const int environmentScore):
-
-                                    facilityName(facilityName), 
-                                    facilityCategory(facilityCategory), price(price), 
-                                    lifeQualityScore(lifeQualityScore),
-                                    economyScore(economyScore), 
-                                    environmentScore(environmentScore){};
+                                facilityName(facilityName), 
+                                facilityCategory(facilityCategory), 
+                                price(price), 
+                                lifeQualityScore(lifeQualityScore),
+                                economyScore(economyScore), 
+                                environmentScore(environmentScore){};
 
     void AddFacility::act(Simulation &simulation){
         if(simulation.isFacilityExists(facilityName)){
-            BaseAction::error("Facility already exsists"); 
-            cout<< getErrorMsg() << endl;
+            error("Facility already exsists"); 
+            cout<< "ERROR: " + getErrorMsg() << endl;
         }
         else{
             FacilityType newf = FacilityType(facilityName, facilityCategory, price, lifeQualityScore, economyScore, environmentScore);
             simulation.addFacility(newf);
+            complete();
         }
         simulation.addAction(this->clone());
     };
@@ -141,12 +146,14 @@ extern Simulation* backup = nullptr;
     PrintPlanStatus::PrintPlanStatus(int planId):planId(planId){};
     
     void PrintPlanStatus::act(Simulation &simulation){
+        cout << "enetered printplanstatus act, id: " + to_string(planId) << endl;
         if(simulation.isPlanExists(planId)){
-            cout << (simulation.getPlan(planId)).toString() << endl; 
+            cout << (simulation.getPlan(planId)).toString() << endl;
+            complete(); 
         }
         else{
-            BaseAction::error("Plan doesn't exsist"); 
-            cout<< getErrorMsg() << endl;
+            error("Plan doesn't exist"); 
+            cout<< "ERROR: " + getErrorMsg() << endl;
         }
         simulation.addAction(this->clone());
     };
@@ -168,16 +175,18 @@ extern Simulation* backup = nullptr;
             
             //if the current policy is equal to the new policy
             if(currPol->toString() == newPolicy){
-                BaseAction::error("Cannot change selection policy"); 
-                cout<< getErrorMsg() << endl;
+                error("Cannot change selection policy"); 
+                cout<< "ERROR: " + getErrorMsg() << endl;
             }
             else{
                 (simulation.getPlan(planId)).setSelectionPolicy(SelectionPolicy::strToPolicy(newPolicy));
+                complete();
             }
         }
         //if the selection policy or planID don't exist
         else{
-            BaseAction::error("Cannot change selection policy"); // set error message
+            error("Cannot change selection policy"); 
+            cout<< "ERROR: " + getErrorMsg() << endl;
         }
         simulation.addAction(this->clone());
     };
@@ -196,6 +205,7 @@ extern Simulation* backup = nullptr;
     void PrintActionsLog::act(Simulation &simulation) {
         for(const BaseAction* action : simulation.getActionsLog())
             cout<< action->toString() << endl;
+        complete();
         simulation.addAction(this->clone());
     };
     
@@ -211,12 +221,12 @@ extern Simulation* backup = nullptr;
     Close::Close(){};
     
     void Close::act(Simulation &simulation) {
-        
+        cout << "entered baseAction close" << endl;
         for(const Plan& plan : simulation.getPlanVector()){
             int planId = plan.getPlanId();
             cout << simulation.getPlan(planId).toStringClose() << endl;
         }
-        
+        complete();
     };
     //add clone to actionslog?
     Close* Close::clone() const {
@@ -234,7 +244,8 @@ extern Simulation* backup = nullptr;
         if(backup == nullptr)
             backup = new Simulation(simulation);
         else
-            backup = &simulation;
+            *backup = simulation;
+        complete();
         simulation.addAction(this->clone());
     };
     
@@ -249,8 +260,15 @@ extern Simulation* backup = nullptr;
 //RestoreSimulation-----------------------------------------------------------------------
     RestoreSimulation::RestoreSimulation(){};
     void RestoreSimulation::act(Simulation &simulation) {
-        simulation = *backup;
-        simulation.addAction(this->clone());
+        if(backup != nullptr){
+            simulation = *backup;
+            complete();
+            simulation.addAction(this->clone()); 
+        }
+        else{
+            error("No backup available");
+            cout<< "ERROR: " + getErrorMsg() << endl;
+        }
     };
     RestoreSimulation* RestoreSimulation::clone() const {
         return new RestoreSimulation(*this); 

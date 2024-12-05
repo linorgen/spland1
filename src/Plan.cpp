@@ -146,14 +146,15 @@ const vector<Facility*>& Plan::getFacilities() const{
 
 //step()---------------------------------------------------------
 void Plan::step(){
+    cout << "plan step" << endl;
     //step 2
     //if available, add facilities according to the selection policy
     if (status == PlanStatus:: AVALIABLE){ 
         while(underConstruction.size() < static_cast<size_t>(settlement.Settlement::getLimit())){
 
             const FacilityType& nextR = selectionPolicy->selectFacility(facilityOptions);
-            Facility next = Facility(nextR, settlement.getName());
-            underConstruction.push_back(&next); 
+            Facility* next = new Facility(nextR, settlement.getName());
+            underConstruction.push_back(next); 
         }
     }
     //step 3
@@ -164,6 +165,9 @@ void Plan::step(){
 
         if(underConstruction[i]->getStatus() == FacilityStatus::OPERATIONAL){
             facilities.push_back(underConstruction[i]);
+            life_quality_score += underConstruction[i]->getLifeQualityScore();
+            economy_score += underConstruction[i]->getEconomyScore();
+            environment_score += underConstruction[i]->getEnvironmentScore();
             underConstruction.erase(underConstruction.begin() + i);
         }
     }
@@ -204,6 +208,7 @@ const string Plan::toString() const {
     // under-construction facilities
     result += "Facilities Under Construction:\n";
     for (const Facility* facility : underConstruction) {
+        cout << "entered underconstruction loop" << endl;
         result += "  FacilityName: " + facility->getName() + "\n";
         result += "  FacilityStatus: " + to_string(static_cast<int>(facility->getStatus())) + "\n";
     }
@@ -214,7 +219,7 @@ const string Plan::toString() const {
         result += "  FacilityName: " + facility->getName() + "\n";
         result += "  FacilityStatus: " + to_string(static_cast<int>(facility->getStatus())) + "\n";
     }
-
+    cout << "completed plan.toString" + to_string(plan_id) << endl;
     return result;
 }
 

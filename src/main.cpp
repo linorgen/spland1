@@ -7,7 +7,7 @@
 #include "../include/Action.h"
 #include <iostream>
 using namespace std;
-
+Simulation* backup = nullptr;
 
 int main(int argc, char** argv){
       
@@ -16,7 +16,7 @@ int main(int argc, char** argv){
         return 0;
     }
     string configurationFile = argv[1];
-    Simulation* backup = nullptr;
+    
     Simulation simulation(configurationFile);
     
     simulation.start();

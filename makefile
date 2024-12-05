@@ -6,15 +6,11 @@ all: compile link run c
 
 # Compile the source files into object files
 compile:
-	@echo "Compiling source files..."
 	g++ -g -Wall -Weffc++ -std=c++11 -c -Iinclude src/*.cpp
-	@echo "Compilation finished."
 
 # Link the object files and create the executable
 link:
-	@echo "Linking object files..."
 	g++ -g -Wall -Weffc++ -std=c++11 -o bin/main *.o
-	@echo "Linking finished."
 
 # Optional clean rule: remove compiled object files and executables
 clean:
@@ -23,7 +19,6 @@ clean:
 
 # Run the program with the config path argument
 run:
-	@echo "Running the program with the config file..."
 	./bin/main config_file.txt 
 	@echo "Program finished."
 
