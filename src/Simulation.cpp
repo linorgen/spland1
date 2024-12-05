@@ -65,7 +65,6 @@ Simulation::Simulation(const string &configFilePath):
         }
     }
     configFile.close();  // Close the config file after processing
-    start();
 }
 //-----------------------------------------------------------------
 // Destructor
