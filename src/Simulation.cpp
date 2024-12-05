@@ -77,6 +77,8 @@ Simulation::~Simulation(){
         if(set)
             delete set;
     }
+    plans.clear();
+    facilitiesOptions.clear();
 }
 // Copy constructor
 Simulation::Simulation(const Simulation& other): 
@@ -86,22 +88,22 @@ Simulation::Simulation(const Simulation& other):
                             plans(),
                             settlements(),
                             facilitiesOptions(){
-    for(BaseAction* action:other.actionsLog){
+    for(const BaseAction* action:other.actionsLog){
         actionsLog.push_back(action->clone()); }
-    for(Settlement* set:other.settlements){
+    for(const Settlement* set:other.settlements){
         settlements.push_back(new Settlement(*set)); }
     for(const FacilityType& fac: other.facilitiesOptions){
         facilitiesOptions.emplace_back(FacilityType(fac)); //calls FacilityType's copy constructor
         }
 
-    for(Plan otherPlan:other.plans){
+    for(const Plan& otherPlan : other.plans){
         int thisID = otherPlan.getPlanId();
         Settlement *thisSet = &(getSettlement(otherPlan.getSettlementName()));
         //check if we need to delete the pointer we received 
-        SelectionPolicy *thispol = (otherPlan.getSelectionPolicy())->clone();
+        SelectionPolicy* thispol = (otherPlan.getSelectionPolicy()->clone());
         plans.push_back(Plan(thisID, *thisSet, thispol, facilitiesOptions));
     }
-}  
+} 
 // Move constructor
 Simulation::Simulation(Simulation&& other) noexcept: 
                     isRunning(other.isRunning),
@@ -133,15 +135,15 @@ Simulation& Simulation::operator=(const Simulation& other){
     isRunning = other.isRunning;
     planCounter = other.planCounter;
 
-    for (BaseAction* action : other.actionsLog) {
+    for (const BaseAction* action : other.actionsLog) {
         actionsLog.push_back(action->clone()); }
-    for (Settlement* set : other.settlements) {
+    for (const Settlement* set : other.settlements) {
         settlements.push_back(new Settlement(*set)); }
     for(const FacilityType& fac: other.facilitiesOptions){
         facilitiesOptions.emplace_back(fac); //calls FacilityType's copy constructor
     }
 
-    for (Plan otherPlan : other.plans) {
+    for (const Plan& otherPlan : other.plans) {
         int thisID = otherPlan.getPlanId();
         Settlement* thisSet = &(getSettlement(otherPlan.getSettlementName()));
         SelectionPolicy* thisPol = otherPlan.getSelectionPolicy()->clone();
@@ -185,12 +187,15 @@ void Simulation::start(){
 
     //wait for user to enter actions
     while(isRunning){
-
         cout << "enter next command" << endl;
-        string text;
+        string text = "";
         cin >> text;
+        cout<<"received input"<<endl;
+
         vector<string> input = Auxiliary::parseArguments(text);
-        
+        cout<<"Auxilirated"<<endl;
+
+
         if (input.empty())
             continue;
         else if(input[0] == "step"){
@@ -295,7 +300,7 @@ bool Simulation::isSettlementExists(const string &settlementName){
 };
 
 bool Simulation::isFacilityExists(const string &facilityName){
-    for(const FacilityType facType: facilitiesOptions){
+    for(const FacilityType& facType: facilitiesOptions){
         if(facilityName == facType.getName()){
             return true;
         }   
@@ -341,9 +346,8 @@ const vector<Plan>& Simulation::getPlanVector(){
 
 
 void Simulation::step(){
-    for(Plan p: plans){
+    for(Plan& p: plans){
         p.step();
-        //*** add to actionsLog *//
     }
 };
 

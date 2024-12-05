@@ -133,10 +133,10 @@ const int Plan::getEnvironmentScore() const{
 const int Plan::getPlanId() const{
     return plan_id; }
 
-const SelectionPolicy* Plan::getSelectionPolicy(){
+const SelectionPolicy* Plan::getSelectionPolicy() const{
     return selectionPolicy; }
 
-string Plan::getSettlementName(){
+const string Plan::getSettlementName() const{
     return settlement.getName(); }
 
 const vector<Facility*>& Plan::getFacilities() const{
@@ -203,14 +203,14 @@ const string Plan::toString() const {
 
     // under-construction facilities
     result += "Facilities Under Construction:\n";
-    for (Facility* facility : underConstruction) {
+    for (const Facility* facility : underConstruction) {
         result += "  FacilityName: " + facility->getName() + "\n";
         result += "  FacilityStatus: " + to_string(static_cast<int>(facility->getStatus())) + "\n";
     }
 
     //operational facilities
     result += "Operational Facilities:\n";
-    for (Facility* facility : facilities) {
+    for (const Facility* facility : facilities) {
         result += "  FacilityName: " + facility->getName() + "\n";
         result += "  FacilityStatus: " + to_string(static_cast<int>(facility->getStatus())) + "\n";
     }

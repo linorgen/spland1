@@ -24,9 +24,9 @@ class Plan {
         const int getEconomyScore() const;
         const int getEnvironmentScore() const;
         const int getPlanId() const;
-        const SelectionPolicy* getSelectionPolicy();
+        const SelectionPolicy* getSelectionPolicy() const;
         const vector<Facility*> &getFacilities() const;
-        string getSettlementName();
+        const string getSettlementName() const;
         void setSelectionPolicy(SelectionPolicy *selectionPolicy);
         void step();
         void printStatus();

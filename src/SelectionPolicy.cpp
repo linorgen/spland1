@@ -22,7 +22,6 @@ using namespace std;
     
 
 //Naive selection------------------------------------------------------------------------------------------
-//***!!check clone - what is it supposed to do?
 
     //default constructor
     NaiveSelection::NaiveSelection(): lastSelectedIndex(-1){};

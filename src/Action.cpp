@@ -202,7 +202,7 @@ extern Simulation* backup;
         return new PrintActionsLog(*this); 
     };
     
-    const string PrintActionsLog::toString() const { //for printing the actionLog
+    const string PrintActionsLog::toString() const { 
         return "printLog " + getStatusStr();
     };
 
@@ -211,7 +211,7 @@ extern Simulation* backup;
     
     void Close::act(Simulation &simulation) {
         
-        for(Plan plan : simulation.getPlanVector()){
+        for(const Plan& plan : simulation.getPlanVector()){
             int planId = plan.getPlanId();
             cout << simulation.getPlan(planId).toStringClose() << endl;
         }
