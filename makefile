@@ -2,7 +2,7 @@
 # Customize this file to define how to build your project.
 
 # Default target: compile, link, and run the program
-all: compile link run
+all: compile link run c
 
 # Compile the source files into object files
 compile:
@@ -28,4 +28,5 @@ run:
 	@echo "Program finished."
 
 # Optional run with valgrind: Uncomment the next line if you want to run with valgrind
-# valgrind --leak-check=full --show-reachable=yes ./bin/main
+c: all 
+	valgrind --leak-check=full --show-reachable=yes ./bin/main

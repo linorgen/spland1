@@ -10,8 +10,6 @@ using std::string;
 using std::vector;
 using namespace std;
 
-//dalia - delete later
-
 //Simulation constructor - initiating the simulation with configFile--------------------------
 Simulation::Simulation(const string &configFilePath):
                             isRunning(false),
@@ -89,14 +87,13 @@ Simulation::Simulation(const Simulation& other):
                             settlements(),
                             facilitiesOptions(){
     for(BaseAction* action:other.actionsLog){
-        actionsLog.push_back(action->clone());
-    }
+        actionsLog.push_back(action->clone()); }
     for(Settlement* set:other.settlements){
-        settlements.push_back(new Settlement(*set));
-    }
-    for(FacilityType fac: other.facilitiesOptions){
-        facilitiesOptions.push_back(FacilityType(fac));
-    }
+        settlements.push_back(new Settlement(*set)); }
+    for(const FacilityType& fac: other.facilitiesOptions){
+        facilitiesOptions.emplace_back(FacilityType(fac)); //calls FacilityType's copy constructor
+        }
+
     for(Plan otherPlan:other.plans){
         int thisID = otherPlan.getPlanId();
         Settlement *thisSet = &(getSettlement(otherPlan.getSettlementName()));
@@ -117,10 +114,69 @@ Simulation::Simulation(Simulation&& other) noexcept:
     other.planCounter = 0;
 }
 // Copy assignment operator
-Simulation& Simulation::operator=(const Simulation& other){}
+Simulation& Simulation::operator=(const Simulation& other){
+    if(this == &other){
+        return *this;
+    }
+    // Clean up existing resources
+    for (BaseAction* action : actionsLog) {
+        delete action; }
+    actionsLog.clear();
+    for (Settlement* set : settlements) {
+        delete set; }
+    settlements.clear();
+    
+    facilitiesOptions.clear();
+    plans.clear(); 
+
+    // Copy primitive members
+    isRunning = other.isRunning;
+    planCounter = other.planCounter;
+
+    for (BaseAction* action : other.actionsLog) {
+        actionsLog.push_back(action->clone()); }
+    for (Settlement* set : other.settlements) {
+        settlements.push_back(new Settlement(*set)); }
+    for(const FacilityType& fac: other.facilitiesOptions){
+        facilitiesOptions.emplace_back(fac); //calls FacilityType's copy constructor
+    }
+
+    for (Plan otherPlan : other.plans) {
+        int thisID = otherPlan.getPlanId();
+        Settlement* thisSet = &(getSettlement(otherPlan.getSettlementName()));
+        SelectionPolicy* thisPol = otherPlan.getSelectionPolicy()->clone();
+        plans.push_back(Plan(thisID, *thisSet, thisPol, facilitiesOptions));
+    }
+    return *this;
+}
 
 // Move assignment operator
-Simulation& Simulation::operator=(Simulation&& other) noexcept;  
+Simulation& Simulation::operator=(Simulation&& other) noexcept{
+    if (this == &other) {
+        return *this; }
+
+    // Clean up existing resources
+    for (BaseAction* action : actionsLog) {
+        delete action; }
+    for (Settlement* set : settlements) {
+        delete set; }
+
+    plans.clear();
+
+    // Transfer ownership of resources from `other`
+    isRunning = other.isRunning;
+    planCounter = other.planCounter;
+    actionsLog = move(other.actionsLog);
+    plans = move(other.plans);
+    settlements = move(other.settlements);
+    facilitiesOptions = move(other.facilitiesOptions);
+
+    other.isRunning = false;
+    other.planCounter = 0;
+    //all vectors in 'other' are cleared by the move function 
+
+    return *this;
+}
 
 void Simulation::start(){
 
