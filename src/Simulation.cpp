@@ -195,14 +195,17 @@ void Simulation::start(){
 
         if (input.empty())
             continue;
+        //TODO expecting: step, number of steps (int)
         else if(input[0] == "step"){
             SimulateStep* step = new SimulateStep(stoi(input[1]));
             step->act(*this); 
         }
+        //TODO expecting: plan, settlement name, nve/bal/eco/env 
         else if(input[0] == "plan"){
             AddPlan* plan = new AddPlan(input[1], input[2]);
             plan->act(*this);
         }
+        //TODO expecting: settlement, settlement name, type 0/1/2
         else if(input[0] == "settlement"){
             SettlementType type;
             if(input[2] == "0")
@@ -214,6 +217,7 @@ void Simulation::start(){
             AddSettlement* set = new AddSettlement(input[1], type);
             set->act(*this);
         }
+        //TODO expecting: facility, facility name, category 0/1/2, price (int), lifeq score, eco score, env score
         else if(input[0] == "facility"){
             FacilityCategory category;
             if(input[2] == "0")
@@ -225,10 +229,12 @@ void Simulation::start(){
             AddFacility* fac = new AddFacility(input[1], category, stoi(input[3]), stoi(input[4]), stoi(input[5]), stoi(input[6]));
             fac->act(*this);
         }
+        //TODO expects: plan, planID 
         else if(input[0] == "planStatus"){
             PrintPlanStatus* stat = new PrintPlanStatus(stoi(input[1]));
             stat->act(*this);
         }
+        //TODO: expecting changePolicy, planID, nve/bal/eco/env 
         else if(input[0] == "changePolicy"){
             ChangePlanPolicy* pol = new ChangePlanPolicy(stoi(input[1]), input[2]);
             pol->act(*this);
