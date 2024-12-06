@@ -273,5 +273,5 @@ extern Simulation* backup;
         return new RestoreSimulation(*this); 
     };
     const string RestoreSimulation::toString() const {
-        return "restore" + getStatusStr();
+        return "restore " + getStatusStr();
     };

@@ -142,11 +142,17 @@ const string Plan::getSettlementName() const{
 const vector<Facility*>& Plan::getFacilities() const{
     return facilities; }
 
+//Copy scores from other------------------------------------------
+    void Plan::setScores(const Plan& other){
+        life_quality_score = other.getlifeQualityScore();
+        economy_score = other.getEconomyScore();
+        environment_score = other.getEnvironmentScore();
+    }
 
 
 //step()---------------------------------------------------------
 void Plan::step(){
-    //step 2
+    //stage 2
     //if available, add facilities according to the selection policy
     if (status == PlanStatus:: AVALIABLE){ 
         
@@ -155,18 +161,17 @@ void Plan::step(){
             cout << "**UC size = " + to_string(underConstruction.size()) << endl;
             cout << "**limit = " + to_string(static_cast<size_t>(settlement.Settlement::getLimit())) << endl;
             const FacilityType& nextR = selectionPolicy->selectFacility(facilityOptions);
-            cout << "**nextFacType: " + nextR.getName() << endl;
             Facility* next = new Facility(nextR, settlement.getName());
             // underConstruction.push_back(next);
             underConstruction.emplace_back(next); 
             cout << "**UC after = " + to_string(underConstruction.size()) << endl;
         }
     }
-    //step 3
+    //stage 3
     //iterat ethrough all facilities under construction and advance a step
     //if they become operational, move to facilities vector
     for(int i = static_cast<int>(underConstruction.size())-1; i >= 0; i--){
-        underConstruction[i]->step();
+        underConstruction[i]->step(); // facility timeLeft--
 
         if(underConstruction[i]->getStatus() == FacilityStatus::OPERATIONAL){
             life_quality_score += underConstruction[i]->getLifeQualityScore();
@@ -177,7 +182,7 @@ void Plan::step(){
             underConstruction.erase(underConstruction.begin() + i);
         }
     }
-    //step 4
+    //stage 4
     //update plan status
     if(underConstruction.size() == static_cast<size_t>(settlement.getLimit()))
         status = PlanStatus::BUSY;

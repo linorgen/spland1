@@ -99,9 +99,11 @@ Simulation::Simulation(const Simulation& other):
     for(const Plan& otherPlan : other.plans){
         int thisID = otherPlan.getPlanId();
         Settlement *thisSet = &(getSettlement(otherPlan.getSettlementName()));
-        //check if we need to delete the pointer we received 
+        // TODO check if we need to delete the pointer we received
         SelectionPolicy* thispol = (otherPlan.getSelectionPolicy()->clone());
-        plans.push_back(Plan(thisID, *thisSet, thispol, facilitiesOptions));
+        Plan newPlan = Plan(thisID, *thisSet, thispol, facilitiesOptions);
+        newPlan.setScores(otherPlan);
+        plans.emplace_back(newPlan);
     }
 } 
 // Move constructor

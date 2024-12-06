@@ -68,17 +68,20 @@ using namespace std;
     
     //select next facility to build
     const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>& facilitiesOptions){
-
-        const FacilityType* best = &facilitiesOptions[0];
         
+        const FacilityType* best = &facilitiesOptions[0];
+        cout << "**FacOpt in indx 0: " + facilitiesOptions[0].getName() << endl;
         for(size_t i = 1; i<facilitiesOptions.size(); i++){
-
-            if (distance(facilitiesOptions[i]) < distance(*best))
+            cout << "**now best is: " + best->getName() << endl; //TODO 
+            
+            if (distance(facilitiesOptions[i]) < distance(*best)){
+            cout << "**updated best fac from: " + best->getName() + " to: " + facilitiesOptions[i].getName() << endl; 
                 best = &facilitiesOptions[i];
+            }
         }
         return *best;
     }
-    
+ 
     //distance function - aid in selection
     int BalancedSelection::distance(FacilityType facility){
 
@@ -87,6 +90,7 @@ using namespace std;
         int envi = EnvironmentScore + facility.getEnvironmentScore();
         return max({lifeq, eco, envi}) - min({lifeq, eco, envi});
     }
+
 
     const string BalancedSelection::toString() const{
         return "bal"; }
