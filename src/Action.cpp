@@ -42,7 +42,7 @@ extern Simulation* backup;
     };
 
     const string SimulateStep::toString() const{
-        return "simulateStep " + to_string(numOfSteps) + " "+ getStatusStr();
+        return "step " + to_string(numOfSteps) + " "+ getStatusStr();
     } ;
 
     SimulateStep* SimulateStep::clone() const{
@@ -102,7 +102,7 @@ extern Simulation* backup;
             type = "CITY";}
         else if(settlementType == SettlementType::METROPOLIS){
             type = "METROPOLIS";}
-        return "settlement " + settlementName + " " + type + " "+ getStatusStr();
+        return "settlement " + settlementName + " " + type + " " + getStatusStr();
     };
 
 //AddFacility-----------------------------------------------------------------------
@@ -212,7 +212,7 @@ extern Simulation* backup;
     };
     
     const string PrintActionsLog::toString() const { 
-        return "printLog " + getStatusStr();
+        return "log " + getStatusStr();
     };
 
 //Close-----------------------------------------------------------------------------

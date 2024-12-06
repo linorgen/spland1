@@ -33,6 +33,7 @@ class Plan {
         void addFacility(Facility* facility);
         const string toString() const;
         const string toStringClose() const;
+        string toStringPlanStat(PlanStatus status) const; // convert enum PlanStatus to string
         
     private:
         int plan_id;

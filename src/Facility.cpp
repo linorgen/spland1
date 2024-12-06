@@ -53,6 +53,23 @@ using namespace std;
 
     FacilityCategory FacilityType::getCategory() const{
         return category; }
+    
+    string FacilityType::toStringFacCat(const FacilityCategory category) const{
+    switch (category) {
+        case FacilityCategory::LIFE_QUALITY: return "LIFE_QUALITY";
+        case FacilityCategory::ECONOMY:      return "ECONOMY";
+        case FacilityCategory::ENVIRONMENT:  return "ENVIRONMENT";
+        default: throw::invalid_argument("Invalid FacilityCategory value");
+        }
+    }
+
+    string FacilityType::toStringFacStat(const FacilityStatus status) const{
+    switch (status) {
+        case FacilityStatus::UNDER_CONSTRUCTIONS: return "UNDER_CONSTRUCTIONS";
+        case FacilityStatus::OPERATIONAL: return "OPERATIONAL";
+        default: throw std::invalid_argument("Invalid FacilityStatus value");
+        }
+    }
 //----------------------------------------------------------  
 
 

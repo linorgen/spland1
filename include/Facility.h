@@ -27,6 +27,8 @@ class FacilityType {
         int getEnvironmentScore() const;
         int getEconomyScore() const;
         FacilityCategory getCategory() const;
+        string toStringFacCat(const FacilityCategory category) const; //convert enum categry to string
+        string toStringFacStat(const FacilityStatus status) const; //convert enum status to string
 
     protected:
         const string name;

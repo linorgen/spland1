@@ -206,7 +206,7 @@ const string Plan::toString() const {
     //basic information
     result += "planID: " + to_string(plan_id) + "\n"; 
     result += "SettlementName: " + settlement.getName() + "\n";
-    result += "PlanStatus: " + to_string(static_cast<int>(status)) + "\n";
+    result += "PlanStatus: " + toStringPlanStat(status) + "\n";
     result += "SelectionPolicy: " + selectionPolicy->toString() + "\n";
     result += "LifeQualityScore: " + to_string(life_quality_score) + "\n";
     result += "EconomyScore: " + to_string(economy_score) + "\n";
@@ -217,15 +217,15 @@ const string Plan::toString() const {
     for (const Facility* facility : underConstruction) {
         
         result += "  FacilityName: " + facility->getName() + "\n";
-        result += "  FacilityStatus: " + to_string(static_cast<int>(facility->getStatus())) + "\n";
-        result += " ***timeLeft: " + to_string(facility->getTimeLeft()) + "\n";
+        result += "  FacilityStatus: " + facility->toStringFacStat(facility->getStatus()) + "\n";
+        result += " ***timeLeft: " + to_string(facility->getTimeLeft()) + "\n"; //FIXME: delete later
     }
 
     //operational facilities
     result += "Operational Facilities:\n";
     for (const Facility* facility : facilities) {
         result += "  FacilityName: " + facility->getName() + "\n";
-        result += "  FacilityStatus: " + to_string(static_cast<int>(facility->getStatus())) + "\n";
+        result += "  FacilityStatus: " + facility->toStringFacStat((facility->getStatus())) + "\n";
     }
     return result;
 }
@@ -242,4 +242,13 @@ const string Plan::toStringClose() const{
     result += "EnvironmentScore: " + to_string(environment_score) + "\n";
 
     return result;
+}
+
+string Plan::toStringPlanStat(PlanStatus status) const{
+    switch (status) {
+        case PlanStatus::AVALIABLE: return "AVALIABLE";
+        case PlanStatus::BUSY: return "BUSY";
+        default: throw invalid_argument("Invalid PlanStatus value");
+
+    }
 }
