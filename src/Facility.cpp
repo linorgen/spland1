@@ -128,7 +128,7 @@ using namespace std;
 
     FacilityStatus Facility::step(){
         if(timeLeft < 0 )
-            throw invalid_argument("Facility is in nagetive price");
+            throw invalid_argument("Facility is in negative price");
         timeLeft--;
         
         if(timeLeft == 0){            

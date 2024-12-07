@@ -22,7 +22,7 @@ extern Simulation* backup;
 
     void BaseAction::error(string errorMsg) { 
         status = ActionStatus::ERROR;
-        errorMsg = errorMsg;
+        this->errorMsg = errorMsg;
     };
     const string& BaseAction::getErrorMsg() const {
         return errorMsg;
@@ -79,7 +79,7 @@ extern Simulation* backup;
     
     void AddSettlement::act(Simulation &simulation){
         if(simulation.isSettlementExists(settlementName)){
-            BaseAction::error("Settlment already exsists"); 
+            error("Settlment already exsists"); 
             cout<< "ERROR: " + getErrorMsg() << endl;
         }
         else{

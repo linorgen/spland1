@@ -19,9 +19,9 @@ clean:
 
 # Run the program with the config path argument
 run:
-	./bin/main config_file2.txt 
+	./bin/main config_file.txt 
 	@echo "Program finished."
 
 # Optional run with valgrind: Uncomment the next line if you want to run with valgrind
 c: all 
-	valgrind --leak-check=full --show-reachable=yes ./bin/main
+	valgrind --leak-check=full --show-reachable=yes ./bin/main config_file.txt 

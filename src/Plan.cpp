@@ -193,17 +193,20 @@ void Plan::step(){
     //stage 3
     //iterat ethrough all facilities under construction and advance a step
     //if they become operational, move to facilities vector
-    for(int i = static_cast<int>(underConstruction.size())-1; i >= 0; i--){
-        underConstruction[i]->step(); // facility timeLeft--
+    for(auto itr = underConstruction.begin(); itr != underConstruction.end();){
+        
+        (*itr)->step(); // facility timeLeft--
 
-        if(underConstruction[i]->getStatus() == FacilityStatus::OPERATIONAL){
-            life_quality_score += underConstruction[i]->getLifeQualityScore();
-            economy_score += underConstruction[i]->getEconomyScore();
-            environment_score += underConstruction[i]->getEnvironmentScore();
+        if((*itr)->getTimeLeft() == 0 ){
+            life_quality_score += (*itr)->getLifeQualityScore();
+            economy_score += (*itr)->getEconomyScore();
+            environment_score += (*itr)->getEnvironmentScore();
             
-            facilities.emplace_back(underConstruction[i]);
-            underConstruction.erase(underConstruction.begin() + i);
+            facilities.emplace_back((*itr));
+            itr = underConstruction.erase((itr));
         }
+        else 
+            itr ++;
     }
     //stage 4
     //update plan status
@@ -219,7 +222,9 @@ void Plan::printStatus(){
     cout << to_string(static_cast<int>(status)) << endl; }
 
 void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy){
-    selectionPolicy = selectionPolicy; }
+    if (this->getSelectionPolicy() != nullptr)
+        delete this->selectionPolicy;
+    this->selectionPolicy = selectionPolicy; }
 
 void Plan::addFacility(Facility* facility){
     this->underConstruction.emplace_back(facility);

@@ -195,13 +195,13 @@ void Simulation::start(){
             continue;
         //TODO expecting: step, number of steps (int)
         else if(input[0] == "step"){
-            SimulateStep* step = new SimulateStep(stoi(input[1]));
-            step->act(*this); 
+            SimulateStep step = SimulateStep(stoi(input[1]));
+            step.act(*this); 
         }
         //TODO expecting: plan, settlement name, nve/bal/eco/env 
         else if(input[0] == "plan"){
-            AddPlan* plan = new AddPlan(input[1], input[2]);
-            plan->act(*this);
+            AddPlan plan = AddPlan(input[1], input[2]);
+            plan.act(*this);
         }
         //TODO expecting: settlement, settlement name, type 0/1/2
         else if(input[0] == "settlement"){
@@ -212,8 +212,8 @@ void Simulation::start(){
                 type = SettlementType::CITY;    
             else if(input[2] == "2")
                 type = SettlementType::METROPOLIS;
-            AddSettlement* set = new AddSettlement(input[1], type);
-            set->act(*this);
+            AddSettlement set =  AddSettlement(input[1], type);
+            set.act(*this);
         }
         //TODO expecting: facility, facility name, category 0/1/2, price (int), lifeq score, eco score, env score
         else if(input[0] == "facility"){
@@ -224,38 +224,38 @@ void Simulation::start(){
                 category = FacilityCategory::ECONOMY;
             else if(input[2] == "2")
                 category = FacilityCategory::ENVIRONMENT;
-            AddFacility* fac = new AddFacility(input[1], category, stoi(input[3]), stoi(input[4]), stoi(input[5]), stoi(input[6]));
-            fac->act(*this);
+            AddFacility fac = AddFacility(input[1], category, stoi(input[3]), stoi(input[4]), stoi(input[5]), stoi(input[6]));
+            fac.act(*this);
         }
         //TODO expects: plan, planID 
         else if(input[0] == "planStatus"){
-            PrintPlanStatus* stat = new PrintPlanStatus(stoi(input[1]));
-            stat->act(*this);
+            PrintPlanStatus stat = PrintPlanStatus(stoi(input[1]));
+            stat.act(*this);
         }
         //TODO: expecting changePolicy, planID, nve/bal/eco/env 
         else if(input[0] == "changePolicy"){
-            ChangePlanPolicy* pol = new ChangePlanPolicy(stoi(input[1]), input[2]);
-            pol->act(*this);
+            ChangePlanPolicy pol = ChangePlanPolicy(stoi(input[1]), input[2]);
+            pol.act(*this);
         }
         else if(input[0] == "log"){
-            PrintActionsLog* log = new PrintActionsLog();
-            log->act(*this);
+            PrintActionsLog log = PrintActionsLog();
+            log.act(*this);
         }
         else if(input[0] == "close" || input[0] == "Close"){
             close();
-            Close* closeA = new Close();
-            closeA->act(*this);
+            Close closeA = Close();
+            closeA.act(*this);
             cout << "you asked to close " << endl; //TODO delete cout
         }
         else if(input[0] == "backup"){
             cout << "entered Simulation start: backup" << endl; //FIXME: delete
-            BackupSimulation* backup = new BackupSimulation();
-            backup->act(*this); 
+            BackupSimulation backup = BackupSimulation();
+            backup.act(*this); 
         }
         else if(input[0] == "restore"){
             cout << "entered Simulation start: restore" << endl; //FIXME: delete
-            RestoreSimulation* restore = new RestoreSimulation();
-            restore->act(*this);
+            RestoreSimulation restore = RestoreSimulation();
+            restore.act(*this);
         }
         else
             cout << "unkown command" << endl;
