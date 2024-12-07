@@ -266,6 +266,8 @@ extern Simulation* backup;
             simulation = *backup;
             complete();
             simulation.addAction(this->clone()); 
+            cout << "entered restore. this is the restored simulation: \n " + simulation.toString() << endl; //TODO delete
+
         }
         else{
             error("No backup available");

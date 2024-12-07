@@ -100,13 +100,8 @@ Simulation::Simulation(const Simulation& other):
         }
 
     for(const Plan& otherPlan : other.plans){
-        int thisID = otherPlan.getPlanId();
         Settlement *thisSet = &(getSettlement(otherPlan.getSettlementName()));
-        // TODO check if we need to delete the pointer we received
-        SelectionPolicy* thispol = (otherPlan.getSelectionPolicy()->clone());
-        Plan newPlan = Plan(thisID, *thisSet, thispol, facilitiesOptions);
-        newPlan.setScores(otherPlan);
-        plans.emplace_back(newPlan);
+        plans.emplace_back(Plan(otherPlan, thisSet));
     }
 } 
 // Move constructor
@@ -126,10 +121,10 @@ Simulation& Simulation::operator=(const Simulation& other){
         return *this;
     }
     // Clean up existing resources
-    for (BaseAction* action : actionsLog) {
+    for (BaseAction* action : this->actionsLog) {
         delete action; }
     actionsLog.clear();
-    for (Settlement* set : settlements) {
+    for (Settlement* set : this->settlements) {
         delete set; }
     settlements.clear();
     
@@ -141,18 +136,16 @@ Simulation& Simulation::operator=(const Simulation& other){
     planCounter = other.planCounter;
 
     for (const BaseAction* action : other.actionsLog) {
-        actionsLog.push_back(action->clone()); }
+        actionsLog.emplace_back(action->clone()); }
     for (const Settlement* set : other.settlements) {
-        settlements.push_back(new Settlement(*set)); }
+        settlements.emplace_back(new Settlement(*set)); }
     for(const FacilityType& fac: other.facilitiesOptions){
-        facilitiesOptions.emplace_back(fac); //calls FacilityType's copy constructor
+        facilitiesOptions.emplace_back(FacilityType(fac)); //calls FacilityType's copy constructor
     }
 
     for (const Plan& otherPlan : other.plans) {
-        int thisID = otherPlan.getPlanId();
-        Settlement* thisSet = &(getSettlement(otherPlan.getSettlementName()));
-        SelectionPolicy* thisPol = otherPlan.getSelectionPolicy()->clone();
-        plans.push_back(Plan(thisID, *thisSet, thisPol, facilitiesOptions));
+        Settlement *thisSet = &(getSettlement(otherPlan.getSettlementName()));
+        plans.emplace_back(Plan(otherPlan, thisSet));
     }
     return *this;
 }
@@ -274,12 +267,12 @@ void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectio
     const int id = planCounter;
     planCounter++;
     Plan p = Plan( id, settlement, selectionPolicy, this->facilitiesOptions);
-    plans.push_back(p);
+    plans.emplace_back(p);
 };
 
 //!!***make sure - maybe we should create a copy and then insert FIXME: 
 void Simulation::addAction(BaseAction *action){
-    actionsLog.push_back(action);
+    actionsLog.emplace_back(action);
 };
 
 bool Simulation::addSettlement(Settlement *settlement){
@@ -287,7 +280,7 @@ bool Simulation::addSettlement(Settlement *settlement){
         delete settlement;
         return false;
     }
-    settlements.push_back(settlement);
+    settlements.emplace_back(settlement);
     return true;
 };
 
@@ -295,7 +288,7 @@ bool Simulation::addFacility(FacilityType facility){
     if(isFacilityExists(facility.getName())){
         return false;
     }
-    facilitiesOptions.push_back(facility);
+    facilitiesOptions.emplace_back(facility);
     return true;
 };
 
@@ -426,6 +419,6 @@ string Simulation::toString() const{ //TODO delete if needed
             output << facility.getName() << "\n";
         }
     }
-
+    
     return output.str();
 }

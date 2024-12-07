@@ -61,10 +61,10 @@ Plan::Plan(const Plan &other, const int thisplanId):
                 environment_score(other.environment_score){
 
     for(const Facility* Fpointer: other.facilities){
-        this->facilities.push_back(new Facility(*Fpointer));
+        this->facilities.emplace_back(new Facility(*Fpointer));
     }
     for(const Facility* UCpointer: other.underConstruction){
-        this->underConstruction.push_back(new Facility(*UCpointer));
+        this->underConstruction.emplace_back(new Facility(*UCpointer));
     }
     selectionPolicy = other.selectionPolicy->clone();
  }
@@ -83,10 +83,36 @@ Plan::Plan(const Plan &other):
                 environment_score(other.environment_score){
 
     for(const Facility* Fpointer: other.facilities){
-        this->facilities.push_back(new Facility(*Fpointer));
+        cout << "copyConstructor copying facility " + Fpointer->getName() + "size before " + to_string(facilities.size()) << endl; //TODO delete later
+        this->facilities.emplace_back(new Facility(*Fpointer));
+        cout << "size after " + to_string(facilities.size()) << endl;
     }
     for(const Facility* UCpointer: other.underConstruction){
-        this->underConstruction.push_back(new Facility(*UCpointer));
+        this->underConstruction.emplace_back(new Facility(*UCpointer));
+    }
+    selectionPolicy = other.selectionPolicy->clone();
+ }
+
+ //copy constructor for simulation's copy constructor
+Plan::Plan(const Plan &other, Settlement *newSet): 
+                plan_id(other.plan_id), 
+                settlement(*newSet), 
+                selectionPolicy(nullptr),
+                status(other.status),
+                facilities(),
+                underConstruction(),
+                facilityOptions(other.facilityOptions),
+                life_quality_score(other.life_quality_score), 
+                economy_score(other.economy_score), 
+                environment_score(other.environment_score){
+
+    for(const Facility* Fpointer: other.facilities){
+        cout << "simulations copyConstructor copying facility " + Fpointer->getName() + "size before " + to_string(facilities.size()) << endl; //TODO delete
+        this->facilities.emplace_back(new Facility(*Fpointer));
+        cout << "size after " + to_string(facilities.size()) << endl; //TODO delete 
+    }
+    for(const Facility* UCpointer: other.underConstruction){
+        this->underConstruction.emplace_back(new Facility(*UCpointer));
     }
     selectionPolicy = other.selectionPolicy->clone();
  }
@@ -160,7 +186,6 @@ void Plan::step(){
         
             const FacilityType& nextR = selectionPolicy->selectFacility(facilityOptions);
             Facility* next = new Facility(nextR, settlement.getName());
-            // underConstruction.push_back(next);
             underConstruction.emplace_back(next); 
         
         }
@@ -197,9 +222,7 @@ void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy){
     selectionPolicy = selectionPolicy; }
 
 void Plan::addFacility(Facility* facility){
-    // FacilityType newf(facility->getName(), facility->getCategory(), facility->getCost(), facility->getLifeQualityScore(), facility->getEconomyScore(), facility->getEnvironmentScore());
-    // this->facilityOptions.push_back(newf);
-    this->underConstruction.push_back(facility);
+    this->underConstruction.emplace_back(facility);
 }
 
 //standart toString()--------------------------------------------------------------------------
@@ -216,9 +239,9 @@ const string Plan::toString() const {
     result += "EnvironmentScore: " + to_string(environment_score) + "\n";
 
     // under-construction facilities
-    result += "Facilities Under Construction:\n";
+    result += "Facilities Under Construction size :" + to_string(underConstruction.size()) + "\n";
     for (const Facility* facility : underConstruction) {
-        
+        cout << "entered underCOnstruction loop in plan" << endl; //TODO delete later ****
         result += "  FacilityName: " + facility->getName() + "\n";
         result += "  FacilityStatus: " + facility->toStringFacStat(facility->getStatus()) + "\n";
         result += " ***timeLeft: " + to_string(facility->getTimeLeft()) + "\n"; //FIXME: delete later
