@@ -88,10 +88,13 @@ Simulation::Simulation(const Simulation& other):
                             plans(),
                             settlements(),
                             facilitiesOptions(){
+    
     for(const BaseAction* action:other.actionsLog){
-        actionsLog.push_back(action->clone()); }
+        actionsLog.emplace_back(action->clone()); }
+    
     for(const Settlement* set:other.settlements){
-        settlements.push_back(new Settlement(*set)); }
+        settlements.emplace_back(new Settlement(*set)); }
+    
     for(const FacilityType& fac: other.facilitiesOptions){
         facilitiesOptions.emplace_back(FacilityType(fac)); //calls FacilityType's copy constructor
         }
@@ -186,7 +189,6 @@ void Simulation::start(){
 
     cout<<"The simulation has started"<<endl;
     open();
-    int enteredClose = 0; //TODO delete later
     //wait for user to enter actions
     while(this->isRunning){
         cout << "enter next command" << endl;
@@ -194,6 +196,7 @@ void Simulation::start(){
         getline(cin, text);
 
         vector<string> input = Auxiliary::parseArguments(text);
+        cout << "user entered: " + text << endl; // FIXME: delete
 
         if (input.empty())
             continue;
@@ -247,16 +250,17 @@ void Simulation::start(){
         }
         else if(input[0] == "close" || input[0] == "Close"){
             close();
-            enteredClose++; //TODO delete
             Close* closeA = new Close();
             closeA->act(*this);
-            cout << "you asked to close " + to_string(enteredClose) + "times" << endl; //TODO delete cout
+            cout << "you asked to close " << endl; //TODO delete cout
         }
         else if(input[0] == "backup"){
+            cout << "entered Simulation start: backup" << endl; //FIXME: delete
             BackupSimulation* backup = new BackupSimulation();
             backup->act(*this); 
         }
         else if(input[0] == "restore"){
+            cout << "entered Simulation start: restore" << endl; //FIXME: delete
             RestoreSimulation* restore = new RestoreSimulation();
             restore->act(*this);
         }
@@ -273,7 +277,7 @@ void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectio
     plans.push_back(p);
 };
 
-//!!***make sure - maybe we should create a copy and then insert
+//!!***make sure - maybe we should create a copy and then insert FIXME: 
 void Simulation::addAction(BaseAction *action){
     actionsLog.push_back(action);
 };
@@ -369,3 +373,59 @@ void Simulation::open(){
 void Simulation::close(){
     isRunning = false;
 };
+
+string Simulation::toString() const{ //TODO delete if needed
+    ostringstream output;
+
+    // General simulation status
+    output << "Simulation Status:\n";
+    output << "===================\n";
+    output << "Running: " << (isRunning ? "Yes" : "No") << "\n";
+    output << "Plan Counter: " << planCounter << "\n";
+
+    // Actions log
+    output << "\nActions Log:\n";
+    output << "------------\n";
+    if (actionsLog.empty()) {
+        output << "No actions logged.\n";
+    } else {
+        for (size_t i = 0; i < actionsLog.size(); ++i) {
+            output << "Action " << i + 1 << ": " << actionsLog[i]->toString() << "\n";
+        }
+    }
+
+    // Plans
+    output << "\nPlans:\n";
+    output << "------\n";
+    if (plans.empty()) {
+        output << "No plans available.\n";
+    } else {
+        for (const auto& plan : plans) {
+            output << plan.toString() << "\n";
+        }
+    }
+
+    // Settlements
+    output << "\nSettlements:\n";
+    output << "------------\n";
+    if (settlements.empty()) {
+        output << "No settlements available.\n";
+    } else {
+        for (const auto* settlement : settlements) {
+            output << settlement->toString() << "\n";
+        }
+    }
+
+    // Facilities options
+    output << "\nFacility Options:\n";
+    output << "-----------------\n";
+    if (facilitiesOptions.empty()) {
+        output << "No facilities available.\n";
+    } else {
+        for (const auto& facility : facilitiesOptions) {
+            output << facility.getName() << "\n";
+        }
+    }
+
+    return output.str();
+}

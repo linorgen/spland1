@@ -38,6 +38,7 @@ class Simulation {
         void step();
         void close();
         void open();
+        string toString() const;
 
     private:
         bool isRunning;

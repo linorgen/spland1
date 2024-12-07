@@ -157,14 +157,12 @@ void Plan::step(){
     if (status == PlanStatus:: AVALIABLE){ 
         
         while(underConstruction.size() < static_cast<size_t>(settlement.Settlement::getLimit())){
-            cout << "****plan id: " + to_string(plan_id) << endl;
-            cout << "**UC size = " + to_string(underConstruction.size()) << endl;
-            cout << "**limit = " + to_string(static_cast<size_t>(settlement.Settlement::getLimit())) << endl;
+        
             const FacilityType& nextR = selectionPolicy->selectFacility(facilityOptions);
             Facility* next = new Facility(nextR, settlement.getName());
             // underConstruction.push_back(next);
             underConstruction.emplace_back(next); 
-            cout << "**UC after = " + to_string(underConstruction.size()) << endl;
+        
         }
     }
     //stage 3

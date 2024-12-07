@@ -240,11 +240,13 @@ extern Simulation* backup;
     BackupSimulation::BackupSimulation(){};
     
     void BackupSimulation::act(Simulation &simulation) {
+    
         if(backup == nullptr)
             backup = new Simulation(simulation);
         else
             *backup = simulation;
         complete();
+        cout << backup->toString() << endl; //TODO delete
         simulation.addAction(this->clone());
     };
     
@@ -259,6 +261,7 @@ extern Simulation* backup;
 //RestoreSimulation-----------------------------------------------------------------------
     RestoreSimulation::RestoreSimulation(){};
     void RestoreSimulation::act(Simulation &simulation) {
+         cout << "entered restore. this is the backup here: \n " + backup->toString() << endl; //TODO delete
         if(backup != nullptr){
             simulation = *backup;
             complete();

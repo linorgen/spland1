@@ -70,12 +70,9 @@ using namespace std;
     const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>& facilitiesOptions){
         
         const FacilityType* best = &facilitiesOptions[0];
-        cout << "**FacOpt in indx 0: " + facilitiesOptions[0].getName() << endl;
         for(size_t i = 1; i<facilitiesOptions.size(); i++){
-            cout << "**now best is: " + best->getName() << endl; //TODO 
             
             if (distance(facilitiesOptions[i]) < distance(*best)){
-            cout << "**updated best fac from: " + best->getName() + " to: " + facilitiesOptions[i].getName() << endl; 
                 best = &facilitiesOptions[i];
             }
         }
