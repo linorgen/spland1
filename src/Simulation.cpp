@@ -11,7 +11,7 @@ using std::vector;
 using namespace std;
 extern Simulation* backup;
 
-//Simulation constructor - initiating the simulation with configFile--------------------------
+// Simulation constructor - initiating the simulation with configFile--------------------------
 Simulation::Simulation(const string &configFilePath):
                             isRunning(false),
                             planCounter(0),
@@ -64,7 +64,7 @@ Simulation::Simulation(const string &configFilePath):
             addPlan(getSettlement(arguments[1]), pol);
         }
     }
-    configFile.close();  // Close the config file after processing
+    configFile.close(); // Close the config file after processing
 }
 //-----------------------------------------------------------------
 // Destructor
@@ -96,7 +96,7 @@ Simulation::Simulation(const Simulation& other):
         settlements.emplace_back(new Settlement(*set)); }
     
     for(const FacilityType& fac: other.facilitiesOptions){
-        facilitiesOptions.emplace_back(FacilityType(fac)); //calls FacilityType's copy constructor
+        facilitiesOptions.emplace_back(FacilityType(fac)); // FacilityType's copy constructor
         }
 
     for(const Plan& otherPlan : other.plans){
@@ -135,17 +135,17 @@ Simulation& Simulation::operator=(const Simulation& other){
     isRunning = other.isRunning;
     planCounter = other.planCounter;
 
+    // Deep copy vectors
     for (const BaseAction* action : other.actionsLog) {
         actionsLog.emplace_back(action->clone()); }
     for (const Settlement* set : other.settlements) {
         settlements.emplace_back(new Settlement(*set)); }
     for(const FacilityType& fac: other.facilitiesOptions){
-        facilitiesOptions.emplace_back(FacilityType(fac)); //calls FacilityType's copy constructor
+        facilitiesOptions.emplace_back(FacilityType(fac)); // Calls FacilityType's copy constructor
     }
-
     for (const Plan& otherPlan : other.plans) {
         Settlement *thisSet = &(getSettlement(otherPlan.getSettlementName()));
-        plans.emplace_back(Plan(otherPlan, thisSet));
+        plans.emplace_back(Plan(otherPlan, thisSet)); // Calls plan's copy constructor which receives a pointer to the relevant settlement
     }
     return *this;
 }
@@ -171,9 +171,9 @@ Simulation& Simulation::operator=(Simulation&& other) noexcept{
     settlements = move(other.settlements);
     facilitiesOptions = move(other.facilitiesOptions);
 
+    // Cleans other's primitive members
     other.isRunning = false;
     other.planCounter = 0;
-    //all vectors in 'other' are cleared by the move function 
 
     return *this;
 }
@@ -182,29 +182,28 @@ void Simulation::start(){
 
     cout<<"The simulation has started"<<endl;
     open();
-    //wait for user to enter actions
+    
     while(this->isRunning){
         cout << "enter next command" << endl;
         string text = "";
+        // Receive user input and interprets into vector 
         getline(cin, text);
-
         vector<string> input = Auxiliary::parseArguments(text);
-        cout << "user entered: " + text << endl; // FIXME: delete
 
         if (input.empty())
             continue;
-        //TODO expecting: step, number of steps (int)
-        else if(input[0] == "step"){
+        //expecting: step, number of steps (int)
+        else if(input[0] == "step" && input.size() == 2){
             SimulateStep step = SimulateStep(stoi(input[1]));
             step.act(*this); 
         }
-        //TODO expecting: plan, settlement name, nve/bal/eco/env 
-        else if(input[0] == "plan"){
+        //expecting: plan, settlement name, nve/bal/eco/env 
+        else if(input[0] == "plan" && input.size() == 3){
             AddPlan plan = AddPlan(input[1], input[2]);
             plan.act(*this);
         }
-        //TODO expecting: settlement, settlement name, type 0/1/2
-        else if(input[0] == "settlement"){
+        //expecting: settlement, settlement name, SettlementType 0/1/2
+        else if(input[0] == "settlement" && input.size() == 3){
             SettlementType type;
             if(input[2] == "0")
                 type = SettlementType::VILLAGE;
@@ -215,8 +214,8 @@ void Simulation::start(){
             AddSettlement set =  AddSettlement(input[1], type);
             set.act(*this);
         }
-        //TODO expecting: facility, facility name, category 0/1/2, price (int), lifeq score, eco score, env score
-        else if(input[0] == "facility"){
+        //expecting: facility, facility name, category 0/1/2, price, lifeq score, eco score, env score
+        else if(input[0] == "facility" && input.size() == 7){
             FacilityCategory category;
             if(input[2] == "0")
                 category = FacilityCategory::LIFE_QUALITY;
@@ -227,38 +226,35 @@ void Simulation::start(){
             AddFacility fac = AddFacility(input[1], category, stoi(input[3]), stoi(input[4]), stoi(input[5]), stoi(input[6]));
             fac.act(*this);
         }
-        //TODO expects: plan, planID 
-        else if(input[0] == "planStatus"){
+        //expecting: planStatus, plan, planID 
+        else if(input[0] == "planStatus" && input.size() == 2){
             PrintPlanStatus stat = PrintPlanStatus(stoi(input[1]));
             stat.act(*this);
         }
-        //TODO: expecting changePolicy, planID, nve/bal/eco/env 
-        else if(input[0] == "changePolicy"){
+        //expecting: changePolicy, planID, nve/bal/eco/env 
+        else if(input[0] == "changePolicy" && input.size() == 3){
             ChangePlanPolicy pol = ChangePlanPolicy(stoi(input[1]), input[2]);
             pol.act(*this);
         }
-        else if(input[0] == "log"){
+        else if(input[0] == "log" && input.size() == 1){
             PrintActionsLog log = PrintActionsLog();
             log.act(*this);
         }
-        else if(input[0] == "close" || input[0] == "Close"){
+        else if(input[0] == "close" && input.size() == 1){
             close();
             Close closeA = Close();
             closeA.act(*this);
-            cout << "you asked to close " << endl; //TODO delete cout
         }
-        else if(input[0] == "backup"){
-            cout << "entered Simulation start: backup" << endl; //FIXME: delete
+        else if(input[0] == "backup" && input.size() == 1){
             BackupSimulation backup = BackupSimulation();
             backup.act(*this); 
         }
-        else if(input[0] == "restore"){
-            cout << "entered Simulation start: restore" << endl; //FIXME: delete
+        else if(input[0] == "restore" && input.size() == 1){
             RestoreSimulation restore = RestoreSimulation();
             restore.act(*this);
         }
         else
-            cout << "unkown command" << endl;
+            cout << "unknown command" << endl;
     }
 };
 
@@ -270,7 +266,6 @@ void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectio
     plans.emplace_back(p);
 };
 
-//!!***make sure - maybe we should create a copy and then insert FIXME: 
 void Simulation::addAction(BaseAction *action){
     actionsLog.emplace_back(action);
 };
@@ -292,7 +287,7 @@ bool Simulation::addFacility(FacilityType facility){
     return true;
 };
 
-//isExists---------------------------------------------------------------------
+//isExists---------------------------------------------------------------------------
 bool Simulation::isSettlementExists(const string &settlementName){ 
     for(const Settlement* set: settlements){
         if(settlementName == set->getName()){
@@ -323,9 +318,9 @@ bool Simulation:: isPolicyExists(const string policy){
         return true;
     else
         return false;
-}
+};
 
-//getters----------------------------------------------------------------------
+// Getters----------------------------------------------------------------------
 Settlement& Simulation::getSettlement(const string &settlementName){
     for(Settlement* set: settlements){
         if(settlementName == set->getName()){
@@ -367,7 +362,7 @@ void Simulation::close(){
     isRunning = false;
 };
 
-string Simulation::toString() const{ //TODO delete if needed
+string Simulation::toString() const{ 
     ostringstream output;
 
     // General simulation status

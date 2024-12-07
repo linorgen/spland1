@@ -5,7 +5,7 @@ using std::vector;
 #include <algorithm>
 using namespace std;
 
-//convert selectionPolicy string to selectionPolicy
+// Convert selectionPolicy string to selectionPolicy
     SelectionPolicy* SelectionPolicy::strToPolicy (const string& selectionPolicy){
 
         SelectionPolicy* pol = nullptr;
@@ -21,15 +21,15 @@ using namespace std;
     };
     
 
-//Naive selection------------------------------------------------------------------------------------------
+// Naive selection------------------------------------------------------------------------------------------
 
-    //default constructor
+    // Default constructor
     NaiveSelection::NaiveSelection(): lastSelectedIndex(-1){};
 
-    //copy constructor 
+    // Copy constructor 
     NaiveSelection::NaiveSelection(const NaiveSelection &other): lastSelectedIndex(other.getLastIndex()){};
 
-    //select next facility to build
+    // Select next facility to build
     const FacilityType& NaiveSelection::selectFacility(const vector<FacilityType>& facilitiesOptions){
 
         if(static_cast<size_t>(lastSelectedIndex) == facilitiesOptions.size())
@@ -50,9 +50,9 @@ using namespace std;
     
 
 
-//BalancedSelection-----------------------------------------------------------------------------------------
+// BalancedSelection-----------------------------------------------------------------------------------------
     
-    //constructor
+    // Constructor
     BalancedSelection::BalancedSelection(int LifeQualityScore, 
                                         int EconomyScore, 
                                         int EnvironmentScore): 
@@ -60,13 +60,13 @@ using namespace std;
                                                 EconomyScore(EconomyScore), 
                                                 EnvironmentScore(EnvironmentScore){};
     
-    //copy constructor 
+    // Copy constructor 
     BalancedSelection::BalancedSelection(const BalancedSelection &other): 
                                                 LifeQualityScore(other.LifeQualityScore), 
                                                 EconomyScore(other.EconomyScore), 
                                                 EnvironmentScore(other.EnvironmentScore){};
     
-    //select next facility to build
+    // Select next facility to build
     const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>& facilitiesOptions){
         
         const FacilityType* best = &facilitiesOptions[0];
@@ -79,7 +79,7 @@ using namespace std;
         return *best;
     }
  
-    //distance function - aid in selection
+    // Distance function - aid in selection
     int BalancedSelection::distance(FacilityType facility){
 
         int lifeq = LifeQualityScore + facility.getLifeQualityScore();
@@ -98,15 +98,15 @@ using namespace std;
 
 
 
-//EconomySelection----------------------------------------------------------------------------------------
+// EconomySelection----------------------------------------------------------------------------------------
     
-    //constructor
+    // Constructor
     EconomySelection::EconomySelection(): lastSelectedIndex(-1){};
     
-    //copy constructor
+    // Copy constructor
     EconomySelection::EconomySelection(const EconomySelection &other): lastSelectedIndex(other.lastSelectedIndex){};
     
-    //select next facility to build
+    // Select next facility to build
     const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>& facilitiesOptions){
 
         bool found = false;
@@ -132,16 +132,16 @@ using namespace std;
     
 
 
-//SustainabilitySelection-------------------------------------------------------------------------------
+// SustainabilitySelection-------------------------------------------------------------------------------
     
-    //constructor
+    // Constructor
     SustainabilitySelection::SustainabilitySelection(): lastSelectedIndex(-1){};
     
-    //copy constructor
+    // Copy constructor
     SustainabilitySelection::SustainabilitySelection(const SustainabilitySelection &other):   
                                                             lastSelectedIndex(other.lastSelectedIndex){};
     
-    //select next facility to build
+    // Select next facility to build
     const FacilityType& SustainabilitySelection::selectFacility(const vector<FacilityType>& facilitiesOptions){
         bool found = false;
         int index = lastSelectedIndex;

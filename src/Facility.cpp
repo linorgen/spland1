@@ -3,9 +3,9 @@
 using namespace std;
 
 
-//FacilityType-----------------------------------------------------------------------------
+// FacilityType-----------------------------------------------------------------------------
 
-    //empty constructor
+    // Empty constructor
     FacilityType::FacilityType(): name(""), 
                                 category(FacilityCategory::ECONOMY), 
                                 price(0), 
@@ -13,7 +13,7 @@ using namespace std;
                                 economy_score(0), 
                                 environment_score(0) {}
 
-    //constructor
+    // Constructor
     FacilityType::FacilityType(const string &name, 
                                 const FacilityCategory category, 
                                 const int price, 
@@ -73,15 +73,15 @@ using namespace std;
 //----------------------------------------------------------  
 
 
-//Facility-------------------------------------------------------------------------------------
+//Facility-----------------------------------------------------------------------------------
    
-    //empty constructor
+    // Empty constructor
     Facility::Facility(): FacilityType(), 
                             settlementName(""), 
                             status(FacilityStatus:: UNDER_CONSTRUCTIONS),
                             timeLeft(0) {}
     
-    //constructor
+    // Constructor
     Facility::Facility(const string &name, 
                         const string &settlementName, 
                         const FacilityCategory category, 
@@ -100,7 +100,7 @@ using namespace std;
                             status(FacilityStatus:: UNDER_CONSTRUCTIONS),
                             timeLeft(price){}
 
-    //copy constructor that gets FacilityType
+    // Copy constructor that gets FacilityType
     Facility::Facility(const FacilityType &type, 
                         const string &settlementName): 
                             FacilityType(type), 
@@ -108,14 +108,14 @@ using namespace std;
                             status(FacilityStatus:: UNDER_CONSTRUCTIONS),
                             timeLeft(price){}
 
-    //copy constructor that gets Facility
+    // Copy constructor that gets Facility
     Facility::Facility(const Facility &other): FacilityType(other), 
                                                 settlementName(other.settlementName), 
                                                 status(other.status), 
                                                 timeLeft(other.timeLeft) {}
 
     
-    //getters------------------------------------------------------------------------
+    // Getters------------------------------------------------------------------------
     const string &Facility::getSettlementName() const{
         return name; }
 
@@ -129,20 +129,17 @@ using namespace std;
     FacilityStatus Facility::step(){
         if(timeLeft < 0 )
             throw invalid_argument("Facility is in negative price");
-        timeLeft--;
         
+        timeLeft--;
         if(timeLeft == 0){            
             status = FacilityStatus:: OPERATIONAL;
         }
         return status;
     }
     
-
     void Facility::setStatus(FacilityStatus status){
         status = status; 
     }
-
-    
     
     const string Facility::toString() const{
 

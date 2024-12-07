@@ -95,14 +95,14 @@ extern Simulation* backup;
     };
         
     const string AddSettlement::toString() const{
-        string type;
+        int type;
         if(settlementType == SettlementType::VILLAGE){
-            type = "VILLAGE";}
+            type = 0;}
         else if(settlementType == SettlementType::CITY){
-            type = "CITY";}
+            type = 1;}
         else if(settlementType == SettlementType::METROPOLIS){
-            type = "METROPOLIS";}
-        return "settlement " + settlementName + " " + type + " " + getStatusStr();
+            type = 2;}
+        return "settlement " + settlementName + " " + to_string(type) + " " + getStatusStr();
     };
 
 //AddFacility-----------------------------------------------------------------------
@@ -246,7 +246,6 @@ extern Simulation* backup;
         else
             *backup = simulation;
         complete();
-        cout << backup->toString() << endl; //TODO delete
         simulation.addAction(this->clone());
     };
     
@@ -261,13 +260,10 @@ extern Simulation* backup;
 //RestoreSimulation-----------------------------------------------------------------------
     RestoreSimulation::RestoreSimulation(){};
     void RestoreSimulation::act(Simulation &simulation) {
-         cout << "entered restore. this is the backup here: \n " + backup->toString() << endl; //TODO delete
         if(backup != nullptr){
             simulation = *backup;
             complete();
             simulation.addAction(this->clone()); 
-            cout << "entered restore. this is the restored simulation: \n " + simulation.toString() << endl; //TODO delete
-
         }
         else{
             error("No backup available");

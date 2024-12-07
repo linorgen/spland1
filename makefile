@@ -2,7 +2,7 @@
 # Customize this file to define how to build your project.
 
 # Default target: compile, link, and run the program
-all: compile link run c
+all: compile link run c clean
 
 # Compile the source files into object files
 compile:
